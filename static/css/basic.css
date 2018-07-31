@@ -5,7 +5,7 @@ html, body {
 }
 
 .text-left {
-  text-align: center;
+  text-align: left;
 }
 
 .text-center {
@@ -13,5 +13,13 @@ html, body {
 }
 
 .text-right {
-  text-align: center;
+  text-align: right;
+}
+
+.pull-left {
+  float: left;
+}
+
+.pull-right {
+  float: right;
 }

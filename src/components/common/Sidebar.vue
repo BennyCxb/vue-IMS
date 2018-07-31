@@ -1,14 +1,19 @@
 <template>
-  <el-menu default-active="1"
+  <el-menu default-active="2"
            class="el-menu-vertical"
            background-color="#001529"
            text-color="#fff"
+           router
            :collapse="isCollapse">
+    <div class="main-logo">
+      <i class="icon iconfont icon-crown"></i>
+      <span slot="title" v-if="!isCollapse">Info Display Pro</span>
+    </div>
     <el-menu-item index="1">
       <i class="icon iconfont icon-dashboard"></i>
       <span slot="title">总览</span>
     </el-menu-item>
-    <el-menu-item index="2">
+    <el-menu-item index="2" route="Terminal">
       <i class="icon iconfont icon-edit-square"></i>
       <span slot="title">终端管理</span>
     </el-menu-item>
@@ -52,13 +57,31 @@ export default {
     text-align: left;
   }
   .el-menu-vertical:not(.el-menu--collapse) {
-    width: 200px;
+    width: 250px;
     height: 100%;
     min-height: 400px;
   }
 
   .el-menu, .el-menu-vertical, .el-menu--collapse {
     background: #001529;
+  }
+
+  .main-logo {
+    height: 60px;
+    line-height: 60px;
+    padding: 0 11px;
+    background:rgba(0,33,64,1);
+    font-size: 24px;
+    color: #ffffff;
+  }
+
+  .main-logo .iconfont {
+    display: inline-block;
+    margin-top: -5px;
+    margin-right: 5px;
+    font-size: 40px;
+    vertical-align: middle;
+    color: #F0656F;
   }
 
   .el-menu-item .iconfont {

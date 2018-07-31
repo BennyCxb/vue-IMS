@@ -23,11 +23,11 @@
         <span>王小虎</span>
       </el-header>
 
-      <el-main>
+      <!--<el-main>-->
         <transition name="move" mode="out-in">
           <router-view></router-view>
         </transition>
-      </el-main>
+      <!--</el-main>-->
     </el-container>
   </el-container>
 

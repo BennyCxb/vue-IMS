@@ -12,12 +12,16 @@ export default new Router({
     {
       path: '/home',
       component: resolve => require(['../components/common/Home.vue'], resolve),
-      // children: [
-      //   {
-      //     path: '/',
-      //     component: resolve => require(['../components/page/Home.vue'], resolve)
-      //   }
-      // ]
+      children: [
+        // {
+        //   path: '/',
+        //   component: resolve => require(['../components/page/Home.vue'], resolve)
+        // },
+        {
+          path: '/Terminal',
+          component: resolve => require(['../components/page/Terminal.vue'], resolve)
+        }
+      ]
     },
     {
       path: '/login',
