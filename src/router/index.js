@@ -19,7 +19,7 @@ export default new Router({
         // },
         {
           path: '/Terminal',
-          component: resolve => require(['../components/page/Terminal.vue'], resolve)
+          component: resolve => require(['../components/Terminal/Terminal.vue'], resolve)
         }
       ]
     },
