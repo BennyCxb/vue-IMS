@@ -26,6 +26,16 @@ export default new Router({
     {
       path: '/login',
       component: resolve => require(['../components/page/Login.vue'], resolve)
+    },
+    {
+      path: '/Personal',
+      component: resolve => require(['../components/Personal/Main.vue'], resolve),
+      children: [
+        {
+          path: '/Personal/Info',
+          component: resolve => require(['../components/Personal/Info.vue'], resolve)
+        }
+      ]
     }
   ]
 })
