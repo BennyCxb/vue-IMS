@@ -61,17 +61,17 @@ export default {
       }, 100)
     }
     var checkEmail = (rule, value, callback) => {
-    const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
-    if (!value) {
-      return callback(new Error('邮箱不能为空'))
-    }
-    setTimeout(() => {
-      if (mailReg.test(value)) {
-        callback()
-      } else {
-        callback(new Error('请输入正确的邮箱格式'))
+      const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
+      if (!value) {
+        return callback(new Error('邮箱不能为空'))
       }
-    }, 100)
+      setTimeout(() => {
+        if (mailReg.test(value)) {
+          callback()
+        } else {
+          callback(new Error('请输入正确的邮箱格式'))
+        }
+      }, 100)
     }
     return {
       timeout: 60,
@@ -120,9 +120,9 @@ export default {
     },
     timer () {
       let self = this
-      this.timeout --
+      this.timeout--
       let timer = setTimeout(function () {
-        self.timeout --
+        self.timeout--
         if (self.timeout === 0) {
           timer.clear()
           self.timeout = 60

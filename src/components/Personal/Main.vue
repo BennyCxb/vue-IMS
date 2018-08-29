@@ -2,14 +2,14 @@
   <el-container>
     <el-header style="text-align: right; font-size: 12px">
       <div class="main-logo">
-        <i class="icon iconfont icon-crown"></i>
-        <span slot="title">Info Display Pro</span>
+        <i class="icon iconfont icon-crown" @click="goHome"></i>
+        <span slot="title" >Info Display Pro</span>
         <span slot="title">个人帐号中心</span>
       </div>
       <el-dropdown>
         <i class="el-icon-setting" style="margin-right: 15px"></i>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item><router-link to="/PersonalInfo">查看</router-link></el-dropdown-item>
+          <el-dropdown-item><router-link to="/Personal">查看</router-link></el-dropdown-item>
           <el-dropdown-item>新增</el-dropdown-item>
           <el-dropdown-item>删除</el-dropdown-item>
         </el-dropdown-menu>
@@ -34,16 +34,16 @@
                 </el-row>
               </div>
 
-              <el-menu default-active="1" class="personal-menu">
-                <el-menu-item index="1">
+              <el-menu default-active="Info" class="personal-menu" router>
+                <el-menu-item index="Info">
                   <span slot="title">个人信息</span>
                 </el-menu-item>
-                <el-menu-item index="2">
+                <el-menu-item index="Password">
                   <span slot="title">帐号密码</span>
                 </el-menu-item>
-                <el-menu-item index="3">
-                  <span slot="title">第三方登陆</span>
-                </el-menu-item>
+                <!--<el-menu-item index="3">-->
+                  <!--<span slot="title">第三方登陆</span>-->
+                <!--</el-menu-item>-->
               </el-menu>
             </div>
           </el-col>
@@ -64,6 +64,11 @@ export default {
     return {
       msg: '',
       active: 0
+    }
+  },
+  methods: {
+    goHome () {
+      this.$router.push({path: '/Home'})
     }
   }
 }

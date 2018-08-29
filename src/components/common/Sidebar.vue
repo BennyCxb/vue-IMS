@@ -1,5 +1,5 @@
 <template>
-  <el-menu default-active="2"
+  <el-menu :default-active="route"
            class="el-menu-vertical"
            background-color="#001529"
            text-color="#fff"
@@ -9,39 +9,45 @@
       <i class="icon iconfont icon-crown"></i>
       <span slot="title" v-if="!isCollapse">Info Display Pro</span>
     </div>
-    <el-menu-item index="1">
+    <el-menu-item index="/Home" route="Home">
       <i class="icon iconfont icon-dashboard"></i>
       <span slot="title">总览</span>
     </el-menu-item>
-    <el-menu-item index="2" route="Terminal">
+    <el-menu-item index="/Terminal" route="Terminal">
       <i class="icon iconfont icon-edit-square"></i>
       <span slot="title">终端管理</span>
     </el-menu-item>
-    <el-menu-item index="3">
+    <el-menu-item index="/Playlist" route="Playlist">
       <i class="icon iconfont icon-table"></i>
       <span slot="title">播单管理</span>
     </el-menu-item>
-    <el-menu-item index="4">
+    <el-menu-item index="/Template" route="Template">
       <i class="icon iconfont icon-detail"></i>
       <span slot="title">模版管理</span>
     </el-menu-item>
-    <el-menu-item index="5">
+    <el-menu-item index="/Resource" route="Resource">
       <i class="icon iconfont icon-folder"></i>
       <span slot="title">资源管理</span>
     </el-menu-item>
-    <el-menu-item index="6">
-      <i class="icon iconfont icon-barchart"></i>
-      <span slot="title">数据分析</span>
-    </el-menu-item>
-    <el-menu-item index="7">
-      <i class="icon iconfont icon-file-exception"></i>
-      <span slot="title">系统日志</span>
-    </el-menu-item>
+    <!--<el-menu-item index="/Analysis" route="Analysis">-->
+      <!--<i class="icon iconfont icon-barchart"></i>-->
+      <!--<span slot="title">数据分析</span>-->
+    <!--</el-menu-item>-->
+    <!--<el-menu-item index="/Log" route="Log">-->
+      <!--<i class="icon iconfont icon-file-exception"></i>-->
+      <!--<span slot="title">系统日志</span>-->
+    <!--</el-menu-item>-->
   </el-menu>
 </template>
 
 <script>
 export default {
+  computed: {
+    route () {
+      console.log(this.$route)
+      return this.$route.path
+    }
+  },
   data () {
     return {
 

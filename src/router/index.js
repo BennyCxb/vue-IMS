@@ -7,7 +7,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/Home'
+      redirect: '/Terminal'
     },
     {
       path: '/home',
@@ -19,8 +19,28 @@ export default new Router({
         // },
         {
           path: '/Terminal',
-          component: resolve => require(['../components/Terminal/Terminal.vue'], resolve)
-        }
+          component: resolve => require(['../components/Terminal/Main.vue'], resolve)
+        },
+        {
+          path: '/Playlist',
+          component: resolve => require(['../components/Playlist/Main.vue'], resolve)
+        },
+        {
+          path: '/Template',
+          component: resolve => require(['../components/Template/Main.vue'], resolve)
+        },
+        {
+          path: '/Resource',
+          component: resolve => require(['../components/Resource/Main.vue'], resolve)
+        },
+        {
+          path: '/Analysis',
+          component: resolve => require(['../components/Analysis/Main.vue'], resolve)
+        },
+        {
+          path: '/Log',
+          component: resolve => require(['../components/Log/Main.vue'], resolve)
+        },
       ]
     },
     {
@@ -29,11 +49,19 @@ export default new Router({
     },
     {
       path: '/Personal',
+      redirect: '/Personal/Info'
+    },
+    {
+      path: '/Personal',
       component: resolve => require(['../components/Personal/Main.vue'], resolve),
       children: [
         {
           path: '/Personal/Info',
           component: resolve => require(['../components/Personal/Info.vue'], resolve)
+        },
+        {
+          path: '/Personal/Password',
+          component: resolve => require(['../components/Personal/Password.vue'], resolve)
         }
       ]
     }
