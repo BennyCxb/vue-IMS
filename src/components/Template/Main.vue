@@ -2,14 +2,20 @@
   <el-container class="playlist-container">
     <el-header class="term-header">
       模版列表
-      <el-button type="danger" plain>紧急插播</el-button>
+      <div class="pull-right">
+        <el-input
+          placeholder="搜索"
+          suffix-icon="el-icon-search"
+          v-model="search"
+          clearable>
+        </el-input>
+      </div>
     </el-header>
     <el-container class="playlist-table-container">
       <el-main>
         <el-header class="term-list-header">
           <el-row>
-            <el-col :span="15" class="text-left"></el-col>
-            <el-col :span="9" class="text-right">
+            <el-col :span="24" class="text-right">
               <el-button type="primary">新建模版</el-button>
               <el-button>复制</el-button>
               <el-button>删除</el-button>
@@ -41,54 +47,17 @@
               </el-table-column>
               <el-table-column
                 prop="name"
-                label="播单名称"
-                width="120">
+                label="模版名称">
               </el-table-column>
               <el-table-column
-                prop="playing"
-                label="播单类型"
-                width="120">
-              </el-table-column>
-              <el-table-column
-                prop="playing"
-                label="提交人"
-                width="120">
-              </el-table-column>
-              <el-table-column
-                prop="name"
-                label="修改时间"
+                label="创建时间"
                 sortable>
                 <template slot-scope="scope">{{ scope.row.datatime }}</template>
               </el-table-column>
               <el-table-column
-                prop="name"
-                label="审核人">
-              </el-table-column>
-              <el-table-column
-                prop="name"
-                label="审核时间">
+                label="修改时间"
+                sortable>
                 <template slot-scope="scope">{{ scope.row.datatime }}</template>
-              </el-table-column>
-              <el-table-column
-                prop="status"
-                label="状态"
-                sortable
-                width="120">
-                <template slot-scope="scope">
-                  <span v-if="scope.row.status == 1">
-                    <span>未审核</span>
-                  </span>
-                  <span v-else-if="scope.row.status == 2">
-                    <span>已审核</span>
-                  </span>
-                  <span v-else-if="scope.row.status == 3">
-                    <span>未通过</span>
-
-                    <el-tooltip class="item" effect="dark" content="Top Left 提示文字" placement="top-start">
-                      <i class="el-icon-info"></i>
-                    </el-tooltip>
-                  </span>
-                </template>
               </el-table-column>
               <el-table-column
                 fixed="right"
@@ -97,7 +66,6 @@
                 <template slot-scope="scope">
                   <el-button @click="openInfo(scope.row)" type="text">详情</el-button>
                   <el-button type="text">配置</el-button>
-                  <el-button type="text">更多</el-button>
                   <el-dropdown>
                     <el-button type="text">更多<i class="el-icon-arrow-down el-icon--right"></i></el-button>
                     <el-dropdown-menu slot="dropdown">
@@ -137,6 +105,7 @@ export default {
   },
   data () {
     return {
+      search: '',
       data: [{
         label: '所有终端',
         children: [{

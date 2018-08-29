@@ -23,6 +23,12 @@ axios.interceptors.request.use(
       spinner: 'el-icon-loading',
       background: 'rgba(0, 0, 0, 0.7)'
     })
+    // const token = cookie.get('TZManage')
+    const token = 'eyJleHAiOjE1MzYxNTU5NTgsImlhdCI6MTUzNTU1MTE1OCwiYWxnIjoiSFMyNTYifQ.eyJ1c2VybmFtZSI6Iis4NjE4MzEyMzQ1Njc4In0.nDEx8XiOmFDXfFGZBYMDd6pgMTwoS2u9GVRXzWYVjZw'
+    if (token) {
+      console.log(token)
+      config.headers.common['Authorization'] = 'Bearer ' + token
+    }
     if (config.method === 'post') {
       config.data = qs.stringify(config.data)
     }

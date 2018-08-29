@@ -1,145 +1,113 @@
 <template>
-  <el-container class="playlist-container">
-    <el-header class="term-header">
+  <el-container class="resource-container">
+    <el-header class="resource-header">
       资源列表
-      <el-button type="danger" plain>紧急插播</el-button>
+      <div class="pull-right">
+        <el-input
+          placeholder="搜索"
+          suffix-icon="el-icon-search"
+          v-model="search"
+          clearable>
+        </el-input>
+      </div>
     </el-header>
-    <el-container class="playlist-table-container">
+    <el-container class="resource-table-container">
       <el-main>
-        <el-header class="term-list-header">
+        <el-header class="resource-list-header">
           <el-row>
-            <el-col :span="15" class="text-left">
-              <el-button-group>
-                <el-button plain>全部（1）</el-button>
-                <el-button plain>未审核（1）</el-button>
-                <el-button plain>已审核（1）</el-button>
-              </el-button-group>
-              <el-select v-model="playValue" placeholder="播单类型">
-                <el-option
-                  v-for="item in playOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </el-col>
-            <el-col :span="9" class="text-right">
-              <el-button type="primary">新建播单</el-button>
-              <el-button>生成离线播单</el-button>
-              <el-button>发布</el-button>
-              <el-button>复制</el-button>
+            <el-col :span="24" class="text-right">
+              <el-button type="primary">上传</el-button>
+              <el-dropdown>
+                <el-button type="primary">
+                  添加<i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item>网址</el-dropdown-item>
+                  <el-dropdown-item>富文本</el-dropdown-item>
+                  <el-dropdown-item>滚动字幕</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+              <el-button>新建文件夹</el-button>
+              <el-button>移动到</el-button>
+              <el-button>下载</el-button>
               <el-button>删除</el-button>
             </el-col>
           </el-row>
         </el-header>
-        <el-main class="term-list-main">
-          <div class="term-list-box">
-            <el-alert
-              title="消息提示的文案"
-              type="info"
-              show-icon
-              :closable="false">
-            </el-alert>
-          </div>
-
-          <div class="term-list-box">
-            <el-table
-              ref="multipleTable"
-              :data="tableData"
-              tooltip-effect="dark"
-              style="width: 100%"
-              align="left"
-              @selection-change="handleSelectionChange">
-              <el-table-column
-                type="selection"
-                align="center"
-                width="55">
-              </el-table-column>
-              <el-table-column
-                prop="name"
-                label="播单名称"
-                width="120">
-              </el-table-column>
-              <el-table-column
-                prop="playing"
-                label="播单类型"
-                width="120">
-              </el-table-column>
-              <el-table-column
-                prop="playing"
-                label="提交人"
-                width="120">
-              </el-table-column>
-              <el-table-column
-                prop="name"
-                label="修改时间"
-                sortable>
-                <template slot-scope="scope">{{ scope.row.datatime }}</template>
-              </el-table-column>
-              <el-table-column
-                prop="name"
-                label="审核人">
-              </el-table-column>
-              <el-table-column
-                prop="name"
-                label="审核时间">
-                <template slot-scope="scope">{{ scope.row.datatime }}</template>
-              </el-table-column>
-              <el-table-column
-                prop="status"
-                label="状态"
-                sortable
-                width="120">
-                <template slot-scope="scope">
-                  <span v-if="scope.row.status == 1">
-                    <span>未审核</span>
-                  </span>
-                  <span v-else-if="scope.row.status == 2">
-                    <span>已审核</span>
-                  </span>
-                  <span v-else-if="scope.row.status == 3">
-                    <span>未通过</span>
-
-                    <el-tooltip class="item" effect="dark" content="Top Left 提示文字" placement="top-start">
-                      <i class="el-icon-info"></i>
-                    </el-tooltip>
-                  </span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                fixed="right"
-                label="操作"
-                width="220">
-                <template slot-scope="scope">
-                  <el-button @click="openInfo(scope.row)" type="text">详情</el-button>
-                  <el-button type="text">配置</el-button>
-                  <el-button type="text">更多</el-button>
-                  <el-dropdown>
-                    <el-button type="text">更多<i class="el-icon-arrow-down el-icon--right"></i></el-button>
-                    <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item>删除</el-dropdown-item>
-                      <el-dropdown-item>复制</el-dropdown-item>
-                      <el-dropdown-item>生成离线播单</el-dropdown-item>
-                      <el-dropdown-item>选择终端</el-dropdown-item>
-                    </el-dropdown-menu>
-                  </el-dropdown>
-                </template>
-              </el-table-column>
-            </el-table>
-            <div class="pagination">
-              <el-pagination
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :current-page="currentPage"
-                :page-sizes="[10, 20, 30, 40]"
-                :page-size="pageSize"
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="total">
-              </el-pagination>
+        <el-container class="resource-list-container">
+          <el-aside class="resource-list-category" width="160px">
+            <ul>
+              <li class="resource-list-category-item">全部文件</li>
+            </ul>
+          </el-aside>
+          <el-main class="resource-list-main">
+            <div class="resource-list-box">
+              <el-alert
+                title="消息提示的文案"
+                type="info"
+                show-icon
+                :closable="false">
+              </el-alert>
             </div>
-          </div>
-          <!--<info :termInfoVisible="termInfoVisible" @closeInfo="closeInfo"></info>-->
-        </el-main>
+
+            <div class="resource-list-box">
+              <el-table
+                ref="multipleTable"
+                :data="tableData"
+                tooltip-effect="dark"
+                style="width: 100%"
+                align="left"
+                @selection-change="handleSelectionChange">
+                <el-table-column
+                  type="selection"
+                  align="center"
+                  width="55">
+                </el-table-column>
+                <el-table-column
+                  prop="name"
+                  label="资源名称">
+                </el-table-column>
+                <el-table-column
+                  prop="playing"
+                  label="大小"
+                  sortable>
+                </el-table-column>
+                <el-table-column
+                  label="创建时间"
+                  sortable>
+                  <template slot-scope="scope">{{ scope.row.datatime }}</template>
+                </el-table-column>
+                <el-table-column
+                  label="修改时间"
+                  sortable>
+                  <template slot-scope="scope">{{ scope.row.datatime }}</template>
+                </el-table-column>
+                <el-table-column
+                  fixed="right"
+                  label="操作"
+                  width="150">
+                  <template slot-scope="scope">
+                    <el-button @click="openInfo(scope.row)" type="text">预览</el-button>
+                    <el-button type="text">编辑</el-button>
+                    <el-button type="text">删除</el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <div class="pagination">
+                <el-pagination
+                  @size-change="handleSizeChange"
+                  @current-change="handleCurrentChange"
+                  :current-page="currentPage"
+                  :page-sizes="[10, 20, 30, 40]"
+                  :page-size="pageSize"
+                  layout="total, sizes, prev, pager, next, jumper"
+                  :total="total">
+                </el-pagination>
+              </div>
+            </div>
+            <!--<info :resourceInfoVisible="resourceInfoVisible" @closeInfo="closeInfo"></info>-->
+          </el-main>
+        </el-container>
       </el-main>
     </el-container>
   </el-container>
@@ -153,6 +121,7 @@ export default {
   },
   data () {
     return {
+      search: '',
       data: [{
         label: '所有终端',
         children: [{
@@ -216,7 +185,7 @@ export default {
       currentPage: 1,
       pageSize: 20,
       total: 50,
-      termInfoVisible: false
+      resourceInfoVisible: false
     }
   },
   methods: {
@@ -244,22 +213,46 @@ export default {
     },
     openInfo (row) {
       console.log(row)
-      this.termInfoVisible = true
+      this.resourceInfoVisible = true
     },
     closeInfo () {
-      this.termInfoVisible = false
+      this.resourceInfoVisible = false
+    },
+    getResourceList () {
+      // let self = this
+      let params = {
+        // parent: 0,
+        keyword: this.search,
+        page: this.currentPage,
+        rows: this.pageSize
+      }
+      this.$api.api2.getResourceList(params)
+        .then(response => {
+          let data = response.data
+          console.log(data)
+        })
+        .catch(error => {
+          console.log(error)
+          // self.$alert(error.message, '温馨提示', {
+          //   confirmButtonText: '确定'
+          // })
+        })
     }
+  },
+  created () {
+    // this.getResourceList()
   }
 }
 </script>
 
 <style scoped>
-  .playlist-container {
+
+  .resource-container {
     margin-top: 3px;
     background: #F0F2F5;
   }
 
-  .playlist-container .term-header {
+  .resource-container .resource-header {
     height: 77px !important;
     line-height: 77px !important;
     border-radius: 2px;
@@ -270,12 +263,12 @@ export default {
     color: rgba(0, 0, 0, 0.85);
   }
 
-  .term-sort {
+  .resource-sort {
     height: 100%;
     margin-right: 16px;
   }
 
-  .term-sort-header, .term-list-header {
+  .resource-sort-header, .resource-list-header {
     height: 65px !important;
     line-height: 60px !important;
     border-radius: 2px;
@@ -285,17 +278,17 @@ export default {
     color: rgba(0, 0, 0, 0.85);
   }
 
-  .term-sort-header > button {
+  .resource-sort-header > button {
     width: 100%;
     border-style: dashed;
   }
 
-  .term-sort-main {
+  .resource-sort-main {
     height: 100%;
     background-color: #ffffff;
   }
 
-  .playlist-table-container {
+  .resource-table-container {
     padding: 20px;
   }
 
@@ -303,20 +296,42 @@ export default {
     padding: 0;
   }
 
-  .term-sort-main .el-tree-node__content {
+  .resource-list-container {
+    height: calc(100% - 65px);
+  }
+
+  .resource-list-category {
+    width: 160px;
+    border-right: 1px solid rgba(0,0,0,0.1);
+    background: #ffffff;
+  }
+
+  .resource-list-category-item {
+    padding: 14px 14px 14px 50px;
+    width:56px;
+    height:20px;
+    font-size:14px;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+    color:rgba(0,0,0,0.65);
+    line-height:20px;
+    cursor: pointer;
+  }
+
+  .resource-sort-main .el-tree-node__content {
     padding: 10px;
   }
 
-  .term-list-main {
-    height: calc(100% - 65px);
+  .resource-list-main {
+    height: 100%;
     background-color: #ffffff;
   }
 
-  .term-list-box {
+  .resource-list-box {
     padding: 10px;
   }
 
-  .term-list-box .el-alert {
+  .resource-list-box .el-alert {
     background: #E6F7FF;
     color: #1890FF;
   }

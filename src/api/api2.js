@@ -1,7 +1,7 @@
 import { post, get } from '../axiosconfig/axiosConfig'
 export default {
-  login (params) {
-    return post('/Login/GetUserInfo', params)
+  getResourceList (params) {
+    return get('/resources', params)
   },
   isLogin () {
     return get('/Login/IsLogin')
