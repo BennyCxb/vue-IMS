@@ -11,6 +11,7 @@ import api from './api/'
 Vue.use(ElementUI, { size: 'small', zIndex: 3000 })
 
 Vue.config.productionTip = false
+// Vue.prototype.$axios.defaults.baseURL = process.env.API_ROOT
 
 Vue.prototype.$api = api
 

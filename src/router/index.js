@@ -7,7 +7,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/Terminal'
+      redirect: '/login'
     },
     {
       path: '/home',
@@ -15,7 +15,7 @@ export default new Router({
       children: [
         // {
         //   path: '/',
-        //   component: resolve => require(['../components/page/Home.vue'], resolve)
+        //   component: resolve => require(['../components/Login/Home.vue'], resolve)
         // },
         {
           path: '/Terminal',
@@ -40,12 +40,12 @@ export default new Router({
         {
           path: '/Log',
           component: resolve => require(['../components/Log/Main.vue'], resolve)
-        },
+        }
       ]
     },
     {
       path: '/login',
-      component: resolve => require(['../components/page/Login.vue'], resolve)
+      component: resolve => require(['../components/Login/Login.vue'], resolve)
     },
     {
       path: '/Personal',

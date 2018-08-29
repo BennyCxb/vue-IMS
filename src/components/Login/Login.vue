@@ -50,7 +50,7 @@
 export default {
   data: function () {
     return {
-      activeName: 'second',
+      activeName: 'first',
       getcode: true,
       count: '',
       timer: null,
@@ -95,40 +95,38 @@ export default {
     },
     submitForm (formName) {
       const self = this
-      // self.$refs[formName].validate((valid) => {
-      //     if (valid) {
-      //         localStorage.setItem('ms_username',self.ruleForm.username)
-      //         self.$router.push('/readme')
-      //     } else {
-      //         console.log('error submit!!')
-      //         return false
-      //     }
+      // this.$refs[formName].validate((valid) => {
+      //   if (valid) {
+      //     this.$api.api1.login({
+      //       username: self.ruleForm.username,
+      //       password: self.ruleForm.password
+      //     })
+      //       .then(function (response) {
+      //         let data = response.data
+      //         // console.log(data)
+      //         if (data.code === 1) {
+      //           self.$cookies.set('TZManage', data.object, {expires: 12})
+      //           localStorage.setItem('ms_username', self.ruleForm.username)
+      //           self.$router.push('/home')
+      //         } else {
+      //           self.$alert(data.message, '温馨提示', {
+      //             confirmButtonText: '确定'
+      //           })
+      //           return false
+      //         }
+      //       })
+      //       .catch(function (error) {
+      //         // console.log(error)
+      //         self.$alert(error.message, '温馨提示', {
+      //           confirmButtonText: '确定'
+      //         })
+      //       })
+      //   } else {
+      //       console.log('error submit!!')
+      //       return false
+      //   }
       // })
-      this.$api.api1.login({
-        UserName: self.ruleForm.username,
-        UserPwd: self.ruleForm.password,
-        FProject: 1
-      })
-        .then(function (response) {
-          let data = response.data
-          // console.log(data)
-          if (data.code === 1) {
-            self.$cookies.set('TZManage', data.object, {expires: 12})
-            localStorage.setItem('ms_username', self.ruleForm.username)
-            self.$router.push('/home')
-          } else {
-            self.$alert(data.message, '温馨提示', {
-              confirmButtonText: '确定'
-            })
-            return false
-          }
-        })
-        .catch(function (error) {
-          // console.log(error)
-          self.$alert(error.message, '温馨提示', {
-            confirmButtonText: '确定'
-          })
-        })
+      self.$router.push('/home')
     }
   }
 }

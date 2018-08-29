@@ -1,5 +1,5 @@
 'use strict'
 module.exports = {
   NODE_ENV: '"production"',
-  API_ROOT: '"//192.168.1.8/api"'//生产环境的接口
+  API_ROOT: '"https://106.14.223.63/v1/"'//生产环境的接口
 }

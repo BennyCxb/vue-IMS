@@ -12,7 +12,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 Vue.prototype.$static = ''
 
 // 配置接口地址
-axios.defaults.baseURL = process.env.API
+axios.defaults.baseURL = process.env.API_ROOT
 var loadingInstance
 // POST传参序列化(添加请求拦截器)
 axios.interceptors.request.use(
