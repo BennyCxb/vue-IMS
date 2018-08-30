@@ -137,6 +137,8 @@ export default {
     position: relative;
     width: 100%;
     height: 100%;
+    background: url("../../assets/images/login-bg.jpg") no-repeat;
+    background-size: 100% 100%;
   }
 
   .ms-title {
@@ -166,8 +168,8 @@ export default {
     left: 50%;
     top: 50%;
     width: 300px;
-    height: 160px;
-    margin: -150px 0 0 -190px;
+    height: 180px;
+    margin: -130px 0 0 -190px;
     padding: 40px;
     border-radius: 5px;
     background: #fff;
