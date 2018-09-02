@@ -9,23 +9,23 @@
       <i class="icon iconfont icon-crown"></i>
       <span slot="title" v-if="!isCollapse">Info Display Pro</span>
     </div>
-    <el-menu-item index="/Home" route="Home">
+    <el-menu-item index="/Home" route="/Home">
       <i class="icon iconfont icon-dashboard"></i>
       <span slot="title">总览</span>
     </el-menu-item>
-    <el-menu-item index="/Terminal" route="Terminal">
+    <el-menu-item index="/Terminal" route="/Terminal">
       <i class="icon iconfont icon-edit-square"></i>
       <span slot="title">终端管理</span>
     </el-menu-item>
-    <el-menu-item index="/Playlist" route="Playlist">
+    <el-menu-item index="/Playlist" route="/Playlist">
       <i class="icon iconfont icon-table"></i>
       <span slot="title">播单管理</span>
     </el-menu-item>
-    <el-menu-item index="/Template" route="Template">
+    <el-menu-item index="/Template" route="/Template">
       <i class="icon iconfont icon-detail"></i>
       <span slot="title">模版管理</span>
     </el-menu-item>
-    <el-menu-item index="/Resource" route="Resource">
+    <el-menu-item index="/Resource" route="/Resource">
       <i class="icon iconfont icon-folder"></i>
       <span slot="title">资源管理</span>
     </el-menu-item>

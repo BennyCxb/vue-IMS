@@ -17,13 +17,19 @@ export default new Router({
         //   path: '/',
         //   component: resolve => require(['../components/Login/Home.vue'], resolve)
         // },
+        // 终端管理
         {
           path: '/Terminal',
           component: resolve => require(['../components/Terminal/Main.vue'], resolve)
         },
+        // 播单管理
         {
           path: '/Playlist',
           component: resolve => require(['../components/Playlist/Main.vue'], resolve)
+        },
+        {
+          path: '/Playlist/Layout',
+          component: resolve => require(['../components/Playlist/Layout.vue'], resolve)
         },
         {
           path: '/Template',
