@@ -7,6 +7,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import './assets/iconfont/iconfont.css'
 import api from './api/'
+import _ from 'lodash'
 
 Vue.use(ElementUI, { size: 'small', zIndex: 3000 })
 
@@ -14,6 +15,7 @@ Vue.config.productionTip = false
 // Vue.prototype.$axios.defaults.baseURL = process.env.API_ROOT
 
 Vue.prototype.$api = api
+Vue.prototype._ = _
 
 /* eslint-disable no-new */
 new Vue({

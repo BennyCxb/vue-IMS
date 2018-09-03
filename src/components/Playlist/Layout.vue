@@ -63,10 +63,10 @@
             <el-row class="layout-main-top">
               <el-col :lg="12" :md="24" class="text-left">
                 画布大小：宽：
-                <el-input-number v-model="layoutData.width" controls-position="right" :min="640" :max="1920"></el-input-number>
+                <el-input-number v-model="layoutData.width" controls-position="right" :min="320"></el-input-number>
                 <i class="icon iconfont icon-swap"></i>
                 高：
-                <el-input-number v-model="layoutData.height" controls-position="right" :min="320" :max="1080"></el-input-number>
+                <el-input-number v-model="layoutData.height" controls-position="right" :min="320"></el-input-number>
               </el-col>
               <el-col :lg="12" :md="24" class="text-right">
                 画布背景：
@@ -78,10 +78,33 @@
                 </el-radio>
               </el-col>
             </el-row>
-            <layout :data="layoutData"></layout>
-            <!-- Layout end -->
+            <!--画布模块 begin-->
+            <layout :layoutData="layoutData"></layout>
+            <!--画布模块 end-->
+            <div class="layout-main-assembly">
+              已插入组件：
+              <el-button :type="item.active ? 'primary' : ''" plain v-for="(item, i) in layoutData.elementList" :key="i" :style="{border: `1px solid ${item.style.background}`}">{{item.name}}</el-button>
+            </div>
           </el-main>
-          <el-aside width="256px">
+          <el-aside class="layout-main-right">
+            <!--组件属性-->
+            <div class="layout-assembly-attribute">
+              <div>
+                <label>对齐</label>
+                <span>
+                  <i class="icon iconfont icon-align-left"></i>
+                  <i class="icon iconfont icon-align-center"></i>
+                  <i class="icon iconfont icon-align-right"></i>
+                </span>
+              </div>
+              <div>
+                <label>位置</label>
+                <span>
+                  X <el-input v-model="selectElement.style.left" size="mini"></el-input>
+                </span>
+              </div>
+            </div>
+
           </el-aside>
         </el-container>
       </el-main>
@@ -103,14 +126,61 @@ export default {
       layoutData: {
         width: 1920,
         height: 1080,
-        background: '#D8D8D8'
+        background: '#D8D8D8',
+        elementList: [
+          {
+            name: '组件一',
+            active: true,
+            style: {
+              top: '10px',
+              left: '10px',
+              width: '200px',
+              height: '200px',
+              background: this.randomBgColor(),
+              'z-index': 0
+            }
+          },
+          {
+            name: '组件二',
+            active: false,
+            style: {
+              top: '70px',
+              left: '70px',
+              width: '200px',
+              height: '200px',
+              background: this.randomBgColor(),
+              'z-index': 1
+            }
+          }
+        ]
+      },
+      selectElement: {
+        name: '组件一',
+        active: true,
+        style: {
+          top: '10px',
+          left: '10px',
+          width: '200px',
+          height: '200px',
+          background: this.randomBgColor(),
+          'z-index': 0
+        }
       },
       playlistInfoVisible: false
     }
   },
   methods: {
-
+    // 随机背景色
+    randomBgColor () {
+      let r = Math.floor(Math.random() * 256)
+      let g = Math.floor(Math.random() * 256)
+      let b = Math.floor(Math.random() * 256)
+      return `rgba(${r}, ${g}, ${b}, 0.4)`
+    }
   }
+  // mounted () {
+  //
+  // }
 }
 </script>
 
@@ -245,5 +315,34 @@ export default {
     margin-top: -10px;
     position: relative;
     top: 11px;
+  }
+
+  /*组件按钮样式*/
+  .layout-main-assembly {
+    margin-top: 20px;
+    font-size:14px;
+    color:rgba(0,0,0,0.85);
+  }
+
+  /*画布右侧模块*/
+  .layout-main-right {
+    width: 260px;
+    background:rgba(247,247,247,1);
+  }
+
+  /*组件属性*/
+  .layout-assembly-attribute {
+    padding: 20px;
+    font-size:14px;
+    color:rgba(0,0,0,0.65);
+  }
+
+  .layout-assembly-attribute label {
+    padding-right: 10px;
+  }
+
+  .layout-assembly-attribute .icon {
+    padding-left: 2px;
+    padding-right: 2px;
   }
 </style>
