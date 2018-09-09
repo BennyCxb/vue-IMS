@@ -5,10 +5,34 @@
       <el-aside width="240px">
         <el-container class="term-sort">
           <el-header class="term-sort-header text-center">
-            <el-button icon="el-icon-plus" plain>添加标签</el-button>
+            <!--<el-button icon="el-icon-plus" plain>添加标签</el-button>-->
+            <el-popover
+              placement="top"
+              width="160"
+              v-model="tagsAddVisible">
+              <p><el-input v-model="tagsAddName" placeholder="请输入标签名"></el-input></p>
+              <div style="text-align: right; margin: 0">
+                <el-button size="mini" type="text" @click="tagsAddVisible = false">取消</el-button>
+                <el-button type="primary" size="mini" @click="termTagsAdd">确定</el-button>
+              </div>
+              <el-button slot="reference" icon="el-icon-plus" class="btn-tags-add">添加标签</el-button>
+            </el-popover>
           </el-header>
           <el-main class="term-sort-main">
-            <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+            <!--<el-tree :data="tags" :props="defaultProps" @node-click="handleNodeClick"></el-tree>-->
+            <el-menu
+              default-active="99"
+              class="el-menu-vertical-demo">
+              <el-menu-item index="99" @click="changeTags('')">
+                <template slot="title">
+                  <span>所有终端</span>
+                </template>
+              </el-menu-item>
+              <el-menu-item :index="i.toString()" v-for="(item, i) in tags" :key="i" @click="changeTags(item.name)">
+                <!--<i class="el-icon-menu"></i>-->
+                <span slot="title">{{item.name}}</span>
+              </el-menu-item>
+            </el-menu>
           </el-main>
         </el-container>
       </el-aside>
@@ -17,10 +41,10 @@
           <el-row>
             <el-col :span="15" class="text-left">
               <el-button-group>
-                <el-button plain>全部（1）</el-button>
-                <el-button plain>在线（1）</el-button>
-                <el-button plain>休眠（1）</el-button>
-                <el-button plain>离线（1）</el-button>
+                <el-button :type="!status ? 'primary' : ''" @click="changeStatus(null)">全部（{{total}}）</el-button>
+                <el-button :type="status === 1 ? 'primary' : ''" @click="changeStatus(1)">在线（）</el-button>
+                <el-button :type="status === 2 ? 'primary' : ''" @click="changeStatus(2)">休眠（）</el-button>
+                <el-button :type="status === 3 ? 'primary' : ''" @click="changeStatus(3)">离线（）</el-button>
               </el-button-group>
             </el-col>
             <el-col :span="9" class="text-right">
@@ -31,14 +55,14 @@
           </el-row>
         </el-header>
         <el-main class="term-list-main">
-          <div class="term-list-box">
-            <el-alert
-              title="消息提示的文案"
-              type="info"
-              show-icon
-              :closable="false">
-            </el-alert>
-          </div>
+          <!--<div class="term-list-box">-->
+            <!--<el-alert-->
+              <!--title="消息提示的文案"-->
+              <!--type="info"-->
+              <!--show-icon-->
+              <!--:closable="false">-->
+            <!--</el-alert>-->
+          <!--</div>-->
 
           <div class="term-list-box">
             <el-table
@@ -64,22 +88,22 @@
                 sortable
                 width="120">
                 <template slot-scope="scope">
-                  <span v-if="scope.row.status == 1">
+                  <span v-if="scope.row.status.id == 1">
                     <label style="color: #52C41A">●</label>
                     <span>在线</span>
                   </span>
-                  <span v-else-if="scope.row.status == 2">
+                  <span v-else-if="scope.row.status.id == 2">
                     <label style="color: #BFBFBF">●</label>
                     <span>休眠</span>
                   </span>
-                  <span v-else-if="scope.row.status == 3">
+                  <span v-else-if="scope.row.status.id == 3">
                     <label style="color: #F5222D">●</label>
                     <span>离线</span>
                   </span>
                 </template>
               </el-table-column>
               <el-table-column
-                prop="playing"
+                prop="currentPlayList"
                 label="正在播放"
                 width="120">
               </el-table-column>
@@ -95,7 +119,7 @@
               <el-table-column
                 prop="name"
                 label="最后上线时间">
-                <template slot-scope="scope">{{ scope.row.datatime }}</template>
+                <template slot-scope="scope">{{ scope.row.lastOnlineTime }}</template>
               </el-table-column>
               <el-table-column
                 fixed="right"
@@ -120,7 +144,7 @@
               </el-pagination>
             </div>
           </div>
-          <info :termInfoVisible="termInfoVisible" @closeInfo="closeInfo"></info>
+          <info :termInfoVisible="termInfoVisible" :termid="termid" @closeInfo="closeInfo"></info>
         </el-main>
       </el-main>
     </el-container>
@@ -135,53 +159,17 @@ export default {
   },
   data () {
     return {
-      data: [{
-        label: '所有终端',
-        children: [{
-          label: '未命名终端',
-          children: [{
-            label: '三级 2-1-1'
-          }]
-        }, {
-          label: '分组标签一',
-          children: [{
-            label: '三级 2-2-1'
-          }]
-        }]
-      }],
-      defaultProps: {
-        children: 'children',
-        label: 'label'
-      },
-      tableData: [{
-        datatime: '2016-05-02 10:30:00',
-        name: '未命名终端',
-        playing: '默认播单',
-        status: 1,
-        tags: ['分组标签一', '分组标签二']
-      }, {
-        datatime: '2016-05-04 10:30:00',
-        name: '未命名终端',
-        playing: '默认播单',
-        status: 2,
-        tags: ['分组标签二']
-      }, {
-        datatime: '2016-05-01 10:30:00',
-        name: '终端1',
-        playing: '默认播单',
-        status: 1,
-        tags: ['分组标签一']
-      }, {
-        datatime: '2016-05-03 10:30:00',
-        name: '未命名终端2',
-        playing: '默认播单',
-        status: 3,
-        tags: []
-      }],
-      currentPage: 1,
-      pageSize: 20,
-      total: 50,
-      termInfoVisible: false
+      tagsAddVisible: false,
+      tagsAddName: '',
+      tags: [],
+      tagsName: '',
+      status: null,
+      tableData: [],
+      currentPage: 1, // 当前页码
+      pageSize: 20, // 每页显示条数
+      total: 0, // 总数
+      termInfoVisible: false,
+      termid: ''
     }
   },
   methods: {
@@ -208,12 +196,66 @@ export default {
       console.log(`当前页: ${val}`)
     },
     openInfo (row) {
-      console.log(row)
+      // console.log(row)
+      this.termid = row.id
       this.termInfoVisible = true
     },
     closeInfo () {
       this.termInfoVisible = false
+    },
+    // 获取终端标签列表
+    getTermTagslist () {
+      const self = this
+      this.$api.api2.getTermTagslist()
+        .then(response => {
+          console.log(response)
+          self.tags = [].concat(response)
+        })
+    },
+    // 获取终端列表
+    getTermlist () {
+      const self = this
+      let params = {
+        status: this.status,
+        tagname: this.tagsName,
+        page: this.currentPage,
+        rows: this.pageSize
+      }
+      this.$api.api2.getTermlist(params)
+        .then(response => {
+          // console.log(response)
+          self.currentPage = response.page
+          self.total = response.total
+          self.tableData = response.terms
+        })
+    },
+    termTagsAdd () {
+      const self = this
+      let params = {
+          name: this.tagsAddName
+      }
+      this.$api.api2.termTagsAdd(params)
+        .then(response => {
+          console.log(response)
+          self.getTermTagslist()
+          self.tagsAddVisible = false
+        })
+      // this.$axios
+    },
+    // 切换状态
+    changeTags (name) {
+      this.tagsName = name
+      this.getTermlist()
+    },
+    // 切换状态
+    changeStatus (status) {
+      this.status = status
+      this.getTermlist()
     }
+  },
+  created () {
+    this.getTermTagslist()
+    this.getTermlist()
   }
 }
 </script>
@@ -250,7 +292,7 @@ export default {
     color: rgba(0, 0, 0, 0.85);
   }
 
-  .term-sort-header > button {
+  .term-sort-header .btn-tags-add {
     width: 100%;
     border-style: dashed;
   }
@@ -268,6 +310,7 @@ export default {
     padding: 0;
   }
 
+  /*终端标签*/
   .term-sort-main .el-tree-node__content {
     padding: 10px;
   }
@@ -290,4 +333,6 @@ export default {
     padding: 10px;
     text-align: right;
   }
+
+
 </style>

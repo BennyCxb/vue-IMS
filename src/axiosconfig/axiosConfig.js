@@ -5,9 +5,10 @@ import { Message, Loading } from 'element-ui'
 // 响应时间
 axios.defaults.timeout = 5 * 1000
 // 配置cookie
-// axios.defaults.withCredentials = true
+axios.defaults.withCredentials = false
 // 配置请求头
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
+// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
+axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
 // 静态资源
 Vue.prototype.$static = ''
 
@@ -24,13 +25,13 @@ axios.interceptors.request.use(
       background: 'rgba(0, 0, 0, 0.7)'
     })
     // const token = cookie.get('TZManage')
-    const token = 'eyJleHAiOjE1MzYxNTU5NTgsImlhdCI6MTUzNTU1MTE1OCwiYWxnIjoiSFMyNTYifQ.eyJ1c2VybmFtZSI6Iis4NjE4MzEyMzQ1Njc4In0.nDEx8XiOmFDXfFGZBYMDd6pgMTwoS2u9GVRXzWYVjZw'
+    const token = 'eyJleHAiOjE1MzY4NDAyMTgsImlhdCI6MTUzNjIzNTQxOCwiYWxnIjoiSFMyNTYifQ.eyJ1c2VybmFtZSI6Iis4NjE4MzEyMzQ1Njc4In0.xaOBcGAj-np-yYKK2cU463DVUmX9E8y_NDu-vOtr_ag'
     if (token) {
-      console.log(token)
+      // console.log(token)
       config.headers.common['Authorization'] = 'Bearer ' + token
     }
     if (config.method === 'post') {
-      config.data = qs.stringify(config.data)
+      config.data = JSON.stringify(config.data)
     }
     return config
   },
@@ -43,13 +44,13 @@ axios.interceptors.request.use(
 // 返回状态判断(添加响应拦截器)
 axios.interceptors.response.use(
   res => {
-    if (res.data.code === 200) {
+    // if (res.status === 200) {
       loadingInstance.close()
       return res
-    } else {
-      loadingInstance.close()
-      Message.error(res.data.msg)
-    }
+    // } else {
+    //   loadingInstance.close()
+    //   Message.error(res.data.message)
+    // }
   },
   err => {
     loadingInstance.close()

@@ -3,7 +3,7 @@ export default {
   login (params) {
     return post('/token', params)
   },
-  isLogin () {
-    return get('/Login/IsLogin')
+  getCode () {
+    return get('/captcha/')
   }
 }

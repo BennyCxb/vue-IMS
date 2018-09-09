@@ -8,7 +8,7 @@
       <el-main>
         <el-header class="term-list-header">
           <el-row>
-            <el-col :span="15" class="text-left">
+            <el-col :span="12" class="text-left">
               <el-button-group>
                 <el-button plain>全部（1）</el-button>
                 <el-button plain>未审核（1）</el-button>
@@ -23,7 +23,7 @@
                 </el-option>
               </el-select>
             </el-col>
-            <el-col :span="9" class="text-right">
+            <el-col :span="12" class="text-right">
               <router-link to="/Playlist/Layout"><el-button type="primary">新建播单</el-button></router-link>
               <el-button>生成离线播单</el-button>
               <el-button>发布</el-button>

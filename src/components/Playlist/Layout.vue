@@ -60,24 +60,7 @@
           </el-aside>
           <el-main class="layout-main">
             <!-- Layout begin -->
-            <el-row class="layout-main-top">
-              <el-col :lg="12" :md="24" class="text-left">
-                画布大小：宽：
-                <el-input-number v-model="layoutData.width" controls-position="right" :min="320"></el-input-number>
-                <i class="icon iconfont icon-swap"></i>
-                高：
-                <el-input-number v-model="layoutData.height" controls-position="right" :min="320"></el-input-number>
-              </el-col>
-              <el-col :lg="12" :md="24" class="text-right">
-                画布背景：
-                <el-radio v-model="radio" label="1">
-                  纯色 <el-color-picker v-model="layoutData.background"></el-color-picker>
-                </el-radio>
-                <el-radio v-model="radio" label="2">
-                  图片 <el-button icon="el-icon-upload">上传图片</el-button>
-                </el-radio>
-              </el-col>
-            </el-row>
+
             <!--画布模块 begin-->
             <layout :layoutData="layoutData"></layout>
             <!--画布模块 end-->
@@ -219,10 +202,10 @@ export default {
             name: '组件一',
             active: true,
             style: {
-              top: '10px',
-              left: '10px',
-              width: '200px',
-              height: '200px',
+              top: 10,
+              left: 10,
+              width: 200,
+              height: 200,
               background: this.randomBgColor(),
               'z-index': 0
             }
@@ -231,10 +214,10 @@ export default {
             name: '组件二',
             active: false,
             style: {
-              top: '70px',
-              left: '70px',
-              width: '200px',
-              height: '200px',
+              top: 70,
+              left: 70,
+              width: 200,
+              height: 200,
               background: this.randomBgColor(),
               'z-index': 1
             }
@@ -242,31 +225,31 @@ export default {
         ]
       },
       selectElement: {
-        name: '组件一',                          // 组件名字
-        active: true,                           // 是否被选中
-        type: 2,                                // 组件类型
-        style: {                                // 组件样式
-          top: '10px',
-          left: '10px',
-          width: '200px',
-          height: '200px',
+        name: '组件一', // 组件名字
+        active: true, // 是否被选中
+        type: 2, // 组件类型
+        style: { // 组件样式
+          top: 10,
+          left: 10,
+          width: 200,
+          height: 200,
           background: this.randomBgColor(),
           'z-index': 0
         },
-        // parames: {                              // 字幕组件参数
-        //   direction: '1',                       // 方向{1: 从右到左, 2: 从下到上}
-        //   speed: 3,                             // 速度
-        //   fontFamily: '1',                      // 字体
+        // parames: {// 字幕组件参数
+        //   direction: '1',                       //方向{1: 从右到左, 2: 从下到上}
+        //   speed: 3,                             //速度
+        //   fontFamily: '1',                      //字体
         //   backgroundColor: '#D8D8D8',
         //   color: '#D8D8D8',
-        //   switchType: '1'                       // 切换方式{1:顺序,2:随机}
+        //   switchType: '1'                       //切换方式{1:顺序,2:随机}
         // },
-        parames: {                              // 图片组件参数
-          animation: '1',                       // 动画类型{1: 从右到左, 2: 从下到上}
-          h: 3,                                 // 小时
-          m: 3,                                 // 分钟
-          s: 3,                                 // 秒数
-          switchType: '1'                       // 切换方式{1:顺序,2:随机}
+        parames: { // 图片组件参数
+          animation: '1', // 动画类型{1: 从右到左, 2: 从下到上}
+          h: 3, // 小时
+          m: 3, // 分钟
+          s: 3, // 秒数
+          switchType: '1' // 切换方式{1:顺序,2:随机}
         }
       },
       playlistInfoVisible: false
@@ -278,7 +261,7 @@ export default {
       let r = Math.floor(Math.random() * 256)
       let g = Math.floor(Math.random() * 256)
       let b = Math.floor(Math.random() * 256)
-      return `rgba(${r}, ${g}, ${b}, 0.4)`
+      return `rgba(${r}, ${g}, ${b}, 0.6)`
     }
   }
   // mounted () {
@@ -407,17 +390,6 @@ export default {
     padding: 20px 30px;
     border-left: 1px solid rgba(0,0,0,0.1);
     border-right: 1px solid rgba(0,0,0,0.1);
-  }
-
-  .layout-main-top {
-    line-height: 40px;
-    margin-bottom: 20px;
-  }
-
-  .el-color-picker {
-    margin-top: -10px;
-    position: relative;
-    top: 11px;
   }
 
   /*组件按钮样式*/

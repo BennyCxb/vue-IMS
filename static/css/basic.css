@@ -33,3 +33,19 @@ a{
 .pull-right {
   float: right;
 }
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Chrome/Safari/Opera */
+  -khtml-user-select: none; /* Konqueror */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently not supported by any browser */
+}
+
+/*分割线*/
+.hr-0 {
+  height: 1px;
+  margin: 17px 0;
+  background: rgba(0,0,0,0.09);
+}

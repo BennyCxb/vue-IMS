@@ -37,7 +37,7 @@
               </el-row>
             </el-form-item>
             <div class="login-btn">
-              <el-button type="primary" @click="submitForm('ruleForm')">登 录</el-button>
+              <el-button type="primary" @click="submitPhone('ruleForm')">登 录</el-button>
             </div>
           </el-form>
         </el-tab-pane>
@@ -101,7 +101,7 @@ export default {
       //       username: self.ruleForm.username,
       //       password: self.ruleForm.password
       //     })
-      //       .then(function (response) {
+      //       .then(response => {
       //         let data = response.data
       //         // console.log(data)
       //         if (data.code === 1) {
@@ -116,10 +116,10 @@ export default {
       //         }
       //       })
       //       .catch(function (error) {
-      //         // console.log(error)
-      //         self.$alert(error.message, '温馨提示', {
-      //           confirmButtonText: '确定'
-      //         })
+      //         console.log(error)
+      //         // self.$alert('登录失败，请稍后重试', '温馨提示', {
+      //         //   confirmButtonText: '确定'
+      //         // })
       //       })
       //   } else {
       //     console.log('error submit!!')
@@ -127,6 +127,41 @@ export default {
       //   }
       // })
       self.$router.push('/Home')
+    },
+    submitPhone (formName) {
+      const self = this
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$api.api1.login({
+            username: self.ruleForm.username,
+            password: self.ruleForm.password
+          })
+            .then(function (response) {
+              let data = response.data
+              // console.log(data)
+              if (data.code === 1) {
+                self.$cookies.set('TZManage', data.object, {expires: 12})
+                localStorage.setItem('ms_username', self.ruleForm.username)
+                self.$router.push('/Home')
+              } else {
+                self.$alert(data.message, '温馨提示', {
+                  confirmButtonText: '确定'
+                })
+                return false
+              }
+            })
+            .catch(function (error) {
+              console.log(error)
+              // self.$alert('登录失败，请稍后重试', '温馨提示', {
+              //   confirmButtonText: '确定'
+              // })
+            })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+      // self.$router.push('/Home')
     }
   }
 }
