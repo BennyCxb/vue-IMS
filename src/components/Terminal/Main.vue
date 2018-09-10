@@ -127,7 +127,7 @@
                 width="150">
                 <template slot-scope="scope">
                   <el-button @click="openInfo(scope.row)" type="text">详情</el-button>
-                  <el-button type="text">配置</el-button>
+                  <el-button @click="openConfig(scope.row)" type="text">配置</el-button>
                   <el-button type="text">截屏</el-button>
                 </template>
               </el-table-column>
@@ -145,6 +145,7 @@
             </div>
           </div>
           <info :termInfoVisible="termInfoVisible" :termid="termid" @closeInfo="closeInfo"></info>
+          <config :termConfigVisible="termConfigVisible" :termid="termid" @closeConfig="closeConfig"></config>
         </el-main>
       </el-main>
     </el-container>
@@ -153,9 +154,11 @@
 
 <script>
 import info from './info.vue'
+import config from './config.vue'
 export default {
   components: {
-    info
+    info,
+    config
   },
   data () {
     return {
@@ -169,6 +172,7 @@ export default {
       pageSize: 20, // 每页显示条数
       total: 0, // 总数
       termInfoVisible: false,
+      termConfigVisible: false,
       termid: ''
     }
   },
@@ -202,6 +206,13 @@ export default {
     },
     closeInfo () {
       this.termInfoVisible = false
+    },
+    openConfig (row) {
+      this.termid = row.id
+      this.termConfigVisible = true
+    },
+    closeConfig () {
+      this.termConfigVisible = false
     },
     // 获取终端标签列表
     getTermTagslist () {

@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="终端详情" :visible.sync="termInfoVisible">
+  <el-dialog title="终端详情" :visible.sync="termInfoVisible" :before-close="handleClose">
     <el-form :model="form">
       <el-form-item label="终端名称:" :label-width="formLabelWidth">
         <el-input v-model="form.name" auto-complete="off"></el-input>
