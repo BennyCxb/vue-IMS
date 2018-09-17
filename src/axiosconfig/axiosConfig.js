@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import axios from 'axios'
-import qs from 'qs'
+// import qs from 'qs'
 import { Message, Loading } from 'element-ui'
+import VueCookies from 'vue-cookies'
+
 // 响应时间
 axios.defaults.timeout = 5 * 1000
 // 配置cookie
@@ -11,6 +13,8 @@ axios.defaults.withCredentials = false
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
 // 静态资源
 Vue.prototype.$static = ''
+
+const cookies = VueCookies
 
 // 配置接口地址
 axios.defaults.baseURL = process.env.API_ROOT
@@ -24,10 +28,10 @@ axios.interceptors.request.use(
       spinner: 'el-icon-loading',
       background: 'rgba(0, 0, 0, 0.7)'
     })
-    // const token = cookie.get('TZManage')
+    // const token = cookies.get('token')
     const token = 'eyJleHAiOjE1MzY4NDAyMTgsImlhdCI6MTUzNjIzNTQxOCwiYWxnIjoiSFMyNTYifQ.eyJ1c2VybmFtZSI6Iis4NjE4MzEyMzQ1Njc4In0.xaOBcGAj-np-yYKK2cU463DVUmX9E8y_NDu-vOtr_ag'
     if (token) {
-      // console.log(token)
+      console.log(token)
       config.headers.common['Authorization'] = 'Bearer ' + token
     }
     if (config.method === 'post') {
@@ -45,8 +49,8 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   res => {
     // if (res.status === 200) {
-      loadingInstance.close()
-      return res
+    loadingInstance.close()
+    return res
     // } else {
     //   loadingInstance.close()
     //   Message.error(res.data.message)

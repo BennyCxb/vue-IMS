@@ -49,6 +49,10 @@
         </vue-draggable-resizable>
       </template>
     </div>
+    <div class="layout-main-assembly">
+      已插入组件：
+      <el-button :type="item.active ? 'primary' : ''" plain v-for="(item, i) in layoutData.elementList" :key="i" :style="{border: `1px solid ${item.style.background}`}">{{item.name}}</el-button>
+    </div>
   </div>
 </template>
 
@@ -77,7 +81,7 @@ export default {
       if (container) {
         let width = container.offsetWidth
         // let height = container.offsetHeight
-        let rate = width / this.layoutData.width
+        let rate = Number((width / this.layoutData.width).toFixed(2))
         this.rate = rate
         this.cheight = Math.round(rate * this.layoutData.height)
         this.resetLayoutSize()
@@ -94,15 +98,16 @@ export default {
         // item.style.height = height * self.rate + 'px'
         // item.style.top = top * self.rate + 'px'
         // item.style.left = left * self.rate + 'px'
-        let width = Number(item.style.width)
-        let height = Number(item.style.height)
-        let top = Number(item.style.top)
-        let left = Number(item.style.left)
-        item.style.width = width * self.rate
-        item.style.height = height * self.rate
-        item.style.top = top * self.rate
-        item.style.left = left * self.rate
+        let width = item.style.width * (self.rate * 100) / 100
+        let height = item.style.height * (self.rate * 100) / 100
+        let top = item.style.top * (self.rate * 100) / 100
+        let left = item.style.left * (self.rate * 100) / 100
+        item.style.width = Number(width)
+        item.style.height = Number(height)
+        item.style.top = Number(top)
+        item.style.left = Number(left)
       })
+      console.log(this.layoutData)
     },
     createElement () {
 
@@ -190,24 +195,31 @@ export default {
     border: 1px solid rgba(0, 0, 0, 0.05);
     text-align: center;
     color: #ffffff;
-    /*cursor: pointer;*/
+    cursor: pointer;
   }
 
   .assembly-item.active {
     border: 1px solid rgba(0, 0, 0, 0.5) !important;
-    /*cursor: pointer;*/
+    cursor: move;
   }
 
-  .assembly-item > table {
-    width: 100%;
-    border-spacing: 0;
-  }
+  /*.assembly-item > table {*/
+    /*width: 100%;*/
+    /*border-spacing: 0;*/
+  /*}*/
 
-  .assembly-item > table td {
-    vertical-align:middle;
-    height:100%;
-    text-align: center;
+  /*.assembly-item > table td {*/
+    /*vertical-align:middle;*/
+    /*height:100%;*/
+    /*text-align: center;*/
+    /*font-size:14px;*/
+    /*color: #ffffff;*/
+  /*}*/
+
+  /*组件按钮样式*/
+  .layout-main-assembly {
+    margin-top: 20px;
     font-size:14px;
-    color: #ffffff;
+    color:rgba(0,0,0,0.85);
   }
 </style>

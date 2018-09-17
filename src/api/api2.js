@@ -8,12 +8,20 @@ export default {
     return get('/project/termtags')
   },
   // 新增终端标签
-  termTagsAdd(params) {
+  termTagsAdd (params) {
     return post('/project/termtags', params)
   },
   // 获取终端列表
   getTermlist (params) {
     return get('/terms', params)
+  },
+  // 改变终端状态
+  setTermStatus (params) {
+    return post('/terms', params)
+  },
+  // 终端打标签
+  setTermTags (params) {
+    return post('/terms/tags', params)
   },
   // 获取终端详情
   getTermInfo (params, id) {
@@ -22,5 +30,5 @@ export default {
   // 获取终端配置
   getTermConfig (params, id) {
     return get(`/terms/${id}/config`, params)
-  },
+  }
 }

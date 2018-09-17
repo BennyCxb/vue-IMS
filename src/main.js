@@ -8,8 +8,11 @@ import 'element-ui/lib/theme-chalk/index.css'
 import './assets/iconfont/iconfont.css'
 import api from './api/'
 import _ from 'lodash'
+// 引入cookie
+import VueCookies from 'vue-cookies'
 
 Vue.use(ElementUI, { size: 'small', zIndex: 3000 })
+Vue.use(VueCookies)
 
 Vue.config.productionTip = false
 // Vue.prototype.$axios.defaults.baseURL = process.env.API_ROOT

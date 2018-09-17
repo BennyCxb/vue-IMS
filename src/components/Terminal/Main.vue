@@ -19,7 +19,6 @@
             </el-popover>
           </el-header>
           <el-main class="term-sort-main">
-            <!--<el-tree :data="tags" :props="defaultProps" @node-click="handleNodeClick"></el-tree>-->
             <el-menu
               default-active="99"
               class="el-menu-vertical-demo">
@@ -48,9 +47,24 @@
               </el-button-group>
             </el-col>
             <el-col :span="9" class="text-right">
-              <el-button plain>唤醒</el-button>
-              <el-button plain>休眠</el-button>
-              <el-button plain>打标签</el-button>
+              <el-button plain @click="setTermStatus('on')">唤醒</el-button>
+              <el-button plain @click="setTermStatus('off')">休眠</el-button>
+              <!--<el-button plain>打标签</el-button>-->
+              <el-popover
+                placement="top"
+                width="160"
+                v-model="tagsSetVisible">
+                <p>
+                  <template v-for="(item, i) in tags">
+                    <el-checkbox :key="i" v-model="item.checked">{{item.name}}</el-checkbox>
+                  </template>
+                </p>
+                <div style="text-align: right; margin: 0">
+                  <el-button size="mini" type="text" @click="tagsSetVisible = false">取消</el-button>
+                  <el-button type="primary" size="mini" @click="">确定</el-button>
+                </div>
+                <el-button slot="reference" plain>打标签</el-button>
+              </el-popover>
             </el-col>
           </el-row>
         </el-header>
@@ -162,7 +176,9 @@ export default {
   },
   data () {
     return {
+      multipleSelection: [],
       tagsAddVisible: false,
+      tagsSetVisible: false,
       tagsAddName: '',
       tags: [],
       tagsName: '',
@@ -177,20 +193,9 @@ export default {
     }
   },
   methods: {
-    handleNodeClick (data) {
-      console.log(data)
-    },
-    toggleSelection (rows) {
-      if (rows) {
-        rows.forEach(row => {
-          this.$refs.multipleTable.toggleRowSelection(row)
-        })
-      } else {
-        this.$refs.multipleTable.clearSelection()
-      }
-    },
     handleSelectionChange (val) {
       this.multipleSelection = val
+      console.log(this.multipleSelection)
     },
     handleSizeChange (val) {
       console.log(`每页 ${val} 条`)
@@ -220,7 +225,15 @@ export default {
       this.$api.api2.getTermTagslist()
         .then(response => {
           console.log(response)
-          self.tags = [].concat(response)
+          let list = []
+          self._.each(response, item => {
+            list.push({
+              id: item.id,
+              name: item.name,
+              checked: false,
+            })
+          })
+          self.tags = [].concat(list)
         })
     },
     // 获取终端列表
@@ -243,15 +256,22 @@ export default {
     termTagsAdd () {
       const self = this
       let params = {
-          name: this.tagsAddName
+        name: this.tagsAddName
       }
       this.$api.api2.termTagsAdd(params)
         .then(response => {
           console.log(response)
-          self.getTermTagslist()
-          self.tagsAddVisible = false
+          if (response.message === 'Success.') {
+            self.$message({
+              message: '新增成功！',
+              type: 'success'
+            })
+            self.getTermTagslist()
+            self.tagsAddVisible = false
+          } else {
+            self.$message.error(response.message)
+          }
         })
-      // this.$axios
     },
     // 切换状态
     changeTags (name) {
@@ -262,6 +282,58 @@ export default {
     changeStatus (status) {
       this.status = status
       this.getTermlist()
+    },
+    // 改变终端状态
+    setTermStatus (status) {
+      const self = this
+      let ids = []
+      this._.each(this.multipleSelection, item => {
+        ids.push(item.id)
+      })
+      if (ids.length) {
+        const params = {
+          ids: ids,
+          status: status
+        }
+        this.$api.api2.setTermStatus(params)
+          .then(response => {
+            console.log(response)
+            if (response.message === 'Success.') {
+              self.$message({
+                message: '操作成功！',
+                type: 'success'
+              })
+              self.getTermTagslist()
+            } else {
+              self.$message.error(response.message)
+            }
+          })
+      } else {
+        this.$message({
+          message: '您尚未选择终端',
+          type: 'warning'
+        })
+      }
+    },
+    setTermTags (ids, tags) {
+      const self = this
+      const params = {
+        ids: ids,
+        tags: tags
+      }
+      this.$api.api2.setTermTags(params)
+        .then(response => {
+          console.log(response)
+          if (response.message === 'Success.') {
+            self.$message({
+              message: '操作成功！',
+              type: 'success'
+            })
+            self.getTermTagslist()
+          } else {
+            self.$message.error(response.message)
+          }
+        })
     }
   },
   created () {
@@ -344,6 +416,4 @@ export default {
     padding: 10px;
     text-align: right;
   }
-
-
 </style>

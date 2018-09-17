@@ -64,10 +64,7 @@
             <!--画布模块 begin-->
             <layout :layoutData="layoutData"></layout>
             <!--画布模块 end-->
-            <div class="layout-main-assembly">
-              已插入组件：
-              <el-button :type="item.active ? 'primary' : ''" plain v-for="(item, i) in layoutData.elementList" :key="i" :style="{border: `1px solid ${item.style.background}`}">{{item.name}}</el-button>
-            </div>
+
           </el-main>
           <el-aside class="layout-main-right">
             <!--组件属性-->
@@ -199,7 +196,7 @@ export default {
         background: '#D8D8D8',
         elementList: [
           {
-            name: '组件一',
+            name: '滚动字幕一',
             active: true,
             style: {
               top: 10,
@@ -211,7 +208,7 @@ export default {
             }
           },
           {
-            name: '组件二',
+            name: '视频一',
             active: false,
             style: {
               top: 70,
@@ -390,13 +387,6 @@ export default {
     padding: 20px 30px;
     border-left: 1px solid rgba(0,0,0,0.1);
     border-right: 1px solid rgba(0,0,0,0.1);
-  }
-
-  /*组件按钮样式*/
-  .layout-main-assembly {
-    margin-top: 20px;
-    font-size:14px;
-    color:rgba(0,0,0,0.85);
   }
 
   /*画布右侧模块*/

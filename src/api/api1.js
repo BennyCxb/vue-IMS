@@ -5,5 +5,9 @@ export default {
   },
   getCode () {
     return get('/captcha/')
+  },
+  // 获取登录随机码
+  getVerifyCode (params, phone) {
+    return get(`/verifycode/${phone}`, params)
   }
 }

@@ -47,6 +47,12 @@
 </template>
 
 <script>
+// import { gensalt, hashpw } from './bCrypt'
+// import sha from './sha'
+// import bcrypt from 'bcryptjs'
+
+var bcrypt = require('bcryptjs')
+
 export default {
   data: function () {
     return {
@@ -58,7 +64,8 @@ export default {
         username: '',
         password: '',
         phone: '',
-        code: ''
+        code: '',
+        salt: ''
       },
       rules: {
         username: [
@@ -95,38 +102,15 @@ export default {
     },
     submitForm (formName) {
       const self = this
-      // this.$refs[formName].validate((valid) => {
-      //   if (valid) {
-      //     this.$api.api1.login({
-      //       username: self.ruleForm.username,
-      //       password: self.ruleForm.password
-      //     })
-      //       .then(response => {
-      //         let data = response.data
-      //         // console.log(data)
-      //         if (data.code === 1) {
-      //           self.$cookies.set('TZManage', data.object, {expires: 12})
-      //           localStorage.setItem('ms_username', self.ruleForm.username)
-      //           self.$router.push('/Home')
-      //         } else {
-      //           self.$alert(data.message, '温馨提示', {
-      //             confirmButtonText: '确定'
-      //           })
-      //           return false
-      //         }
-      //       })
-      //       .catch(function (error) {
-      //         console.log(error)
-      //         // self.$alert('登录失败，请稍后重试', '温馨提示', {
-      //         //   confirmButtonText: '确定'
-      //         // })
-      //       })
-      //   } else {
-      //     console.log('error submit!!')
-      //     return false
-      //   }
-      // })
-      self.$router.push('/Home')
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.getVerifyCode()
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+      // self.$router.push('/Home')
     },
     submitPhone (formName) {
       const self = this
@@ -162,6 +146,56 @@ export default {
         }
       })
       // self.$router.push('/Home')
+    },
+    getVerifyCode () {
+      const self = this
+      this.$api.api1.getVerifyCode({}, this.ruleForm.username)
+        .then(function (response) {
+          console.log(response)
+          self.ruleForm.code = response.code
+          self.ruleForm.salt = response.salt
+          self.$router.push('/Home')
+        })
+        .catch(function (error) {
+          console.log(error)
+          // self.$alert('登录失败，请稍后重试', '温馨提示', {
+          //   confirmButtonText: '确定'
+          // })
+        })
+    },
+    psw () {
+      const rawdata = JSON.stringify({
+        UserName: this.form.username,
+        Code: this.form.code
+      })
+      bcrypt.hash(encode(this.form.username), encode(this.form.code))
+    },
+    login () {
+      const self = this
+      this.$api.api1.login({
+        username: self.ruleForm.username,
+        password: self.ruleForm.password
+      })
+        .then(response => {
+          let data = response.data
+          // console.log(data)
+          if (data.code === 1) {
+            self.$cookies.set('token', data.object, {expires: 12})
+            localStorage.setItem('ms_username', self.ruleForm.username)
+            self.$router.push('/Home')
+          } else {
+            self.$alert(data.message, '温馨提示', {
+              confirmButtonText: '确定'
+            })
+            return false
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+          // self.$alert('登录失败，请稍后重试', '温馨提示', {
+          //   confirmButtonText: '确定'
+          // })
+        })
     }
   }
 }
