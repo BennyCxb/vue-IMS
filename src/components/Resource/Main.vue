@@ -36,9 +36,25 @@
         </el-header>
         <el-container class="resource-list-container">
           <el-aside class="resource-list-category" width="160px">
-            <ul>
-              <li class="resource-list-category-item">全部文件</li>
-            </ul>
+            <!--<ul>-->
+              <!--<li class="resource-list-category-item">全部文件</li>-->
+              <!--<li class="resource-list-category-item">视频</li>-->
+            <!--</ul>-->
+            <el-main class="term-sort-main">
+              <el-menu
+                default-active="99"
+                class="el-menu-vertical-demo">
+                <el-menu-item index="99" @click="changeTags('')">
+                  <template slot="title">
+                    <span>全部文件</span>
+                  </template>
+                </el-menu-item>
+                <el-menu-item :index="i.toString()" v-for="(item, i) in tags" :key="i" @click="changeTags(item.name)">
+                  <!--<i class="el-icon-menu"></i>-->
+                  <span slot="title">{{item.name}}</span>
+                </el-menu-item>
+              </el-menu>
+            </el-main>
           </el-aside>
           <el-main class="resource-list-main">
             <div class="resource-list-box">
@@ -122,49 +138,49 @@ export default {
   data () {
     return {
       search: '',
-      data: [{
-        label: '所有终端',
-        children: [{
-          label: '未命名终端',
-          children: [{
-            label: '三级 2-1-1'
-          }]
-        }, {
-          label: '分组标签一',
-          children: [{
-            label: '三级 2-2-1'
-          }]
-        }]
-      }],
+      tagsName: '',
+      tags: [
+        {
+          id: 1,
+          name: '视频',
+          checked: false
+        },
+        {
+          id: 2,
+          name: '图片',
+          checked: false
+        },
+        {
+          id: 3,
+          name: '音频',
+          checked: false
+        },
+        {
+          id: 4,
+          name: 'PDF',
+          checked: false
+        },
+        {
+          id: 5,
+          name: '网址',
+          checked: false
+        },
+        {
+          id: 6,
+          name: '富文本',
+          checked: false
+        },
+        {
+          id: 7,
+          name: '滚动字幕',
+          checked: false
+        }
+      ],
       defaultProps: {
         children: 'children',
         label: 'label'
       },
-      tableData: [{
-        datatime: '2016-05-02 10:30:00',
-        name: '未命名终端',
-        playing: '默认播单',
-        status: 1,
-        tags: ['分组标签一', '分组标签二']
-      }, {
-        datatime: '2016-05-04 10:30:00',
-        name: '未命名终端',
-        playing: '默认播单',
-        status: 2,
-        tags: ['分组标签二']
-      }, {
-        datatime: '2016-05-01 10:30:00',
-        name: '终端1',
-        playing: '默认播单',
-        status: 1,
-        tags: ['分组标签一']
-      }, {
-        datatime: '2016-05-03 10:30:00',
-        name: '未命名终端2',
-        playing: '默认播单',
-        status: 3,
-        tags: []
-      }],
+      tableData: [],
       playOptions: [{
         value: '选项1',
         label: '黄金糕'
@@ -218,29 +234,35 @@ export default {
     closeInfo () {
       this.resourceInfoVisible = false
     },
+    // 切换状态
+    changeTags (name) {
+      this.tagsName = name
+      this.getResourceList()
+    },
     getResourceList () {
-      // let self = this
+      let self = this
       let params = {
-        // parent: 0,
+        parent: 0,
+        type: this.tagsName,
+        month: '',
         keyword: this.search,
         page: this.currentPage,
         rows: this.pageSize
       }
       this.$api.api2.getResourceList(params)
         .then(response => {
-          let data = response.data
-          console.log(data)
+          console.log(response)
+          self.currentPage = response.page
+          self.total = response.total
+          self.tableData = response.terms
         })
         .catch(error => {
           console.log(error)
-          // self.$alert(error.message, '温馨提示', {
-          //   confirmButtonText: '确定'
-          // })
         })
     }
   },
   created () {
-    // this.getResourceList()
+    this.getResourceList()
   }
 }
 </script>

@@ -52,12 +52,12 @@
               <el-table-column
                 label="创建时间"
                 sortable>
-                <template slot-scope="scope">{{ scope.row.datatime }}</template>
+                <template slot-scope="scope">{{ scope.row.createTime }}</template>
               </el-table-column>
               <el-table-column
                 label="修改时间"
                 sortable>
-                <template slot-scope="scope">{{ scope.row.datatime }}</template>
+                <template slot-scope="scope">{{ scope.row.updateTime }}</template>
               </el-table-column>
               <el-table-column
                 fixed="right"
@@ -124,31 +124,7 @@ export default {
         children: 'children',
         label: 'label'
       },
-      tableData: [{
-        datatime: '2016-05-02 10:30:00',
-        name: '未命名终端',
-        playing: '默认播单',
-        status: 1,
-        tags: ['分组标签一', '分组标签二']
-      }, {
-        datatime: '2016-05-04 10:30:00',
-        name: '未命名终端',
-        playing: '默认播单',
-        status: 2,
-        tags: ['分组标签二']
-      }, {
-        datatime: '2016-05-01 10:30:00',
-        name: '终端1',
-        playing: '默认播单',
-        status: 1,
-        tags: ['分组标签一']
-      }, {
-        datatime: '2016-05-03 10:30:00',
-        name: '未命名终端2',
-        playing: '默认播单',
-        status: 3,
-        tags: []
-      }],
+      tableData: [],
       playOptions: [{
         value: '选项1',
         label: '黄金糕'
@@ -201,7 +177,29 @@ export default {
     },
     closeInfo () {
       this.termInfoVisible = false
+    },
+    getTemplateList () {
+      const self = this
+      let params = {
+        month: '',
+        keyword: this.search,
+        page: this.currentPage,
+        rows: this.pageSize
+      }
+      this.$api.api2.getTemplateList(params)
+        .then(response => {
+          // console.log(response)
+          self.currentPage = response.page
+          self.total = response.total
+          self.tableData = response.terms
+        })
+        .catch(error => {
+          console.log(error)
+        })
     }
+  },
+  created () {
+    this.getTemplateList()
   }
 }
 </script>

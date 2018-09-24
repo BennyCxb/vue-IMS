@@ -149,19 +149,21 @@ export default {
     },
     getVerifyCode () {
       const self = this
-      this.$api.api1.getVerifyCode({}, this.ruleForm.username)
-        .then(function (response) {
-          console.log(response)
-          self.ruleForm.code = response.code
-          self.ruleForm.salt = response.salt
-          self.$router.push('/Home')
-        })
-        .catch(function (error) {
-          console.log(error)
-          // self.$alert('登录失败，请稍后重试', '温馨提示', {
-          //   confirmButtonText: '确定'
-          // })
-        })
+      // this.$api.api1.getVerifyCode({}, this.ruleForm.username)
+      //   .then(function (response) {
+      //     console.log(response)
+      //     self.ruleForm.code = response.code
+      //     self.ruleForm.salt = response.salt
+      //     self.$router.push('/Home')
+      //   })
+      //   .catch(function (error) {
+      //     console.log(error)
+      //     // self.$alert('登录失败，请稍后重试', '温馨提示', {
+      //     //   confirmButtonText: '确定'
+      //     // })
+      //   })
+      self.$router.push('/Home')
+
     },
     psw () {
       const rawdata = JSON.stringify({

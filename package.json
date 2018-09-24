@@ -22,6 +22,7 @@
     "vue": "^2.5.2",
     "vue-cookies": "^1.5.6",
     "vue-draggable-resizable": "^1.7.1",
+    "vue-draggable-resizable-gorkys": "^1.0.1",
     "vue-lodash": "^2.0.0",
     "vue-router": "^3.0.1"
   },

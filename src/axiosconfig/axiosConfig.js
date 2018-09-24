@@ -58,8 +58,9 @@ axios.interceptors.response.use(
   },
   err => {
     loadingInstance.close()
-    Message.error('请求失败，请稍后再试')
-    return Promise.reject(err)
+    // Message.error('请求失败，请稍后再试')
+    // return Promise.reject(err)
+    return err
   }
 )
 // 发送请求

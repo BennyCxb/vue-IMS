@@ -30,5 +30,21 @@ export default {
   // 获取终端配置
   getTermConfig (params, id) {
     return get(`/terms/${id}/config`, params)
+  },
+  // 获取模版列表
+  getTemplateList (params) {
+    return get('/template', params)
+  },
+  // 增加模版
+  addTemplate (params) {
+    return post('/template', params)
+  },
+  // 获取资源列表
+  getResourceList (params) {
+    return get('/resource', params)
+  },
+  // 添加资源
+  addResource (params) {
+    return post('/resource', params)
   }
 }

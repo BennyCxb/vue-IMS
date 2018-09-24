@@ -12,7 +12,7 @@
       <el-col :lg="12" :md="24" class="text-right">
         画布背景：
         <el-radio v-model="radio" label="1">
-          纯色 <el-color-picker v-model="background"></el-color-picker>
+          纯色 <el-color-picker v-model="background" show-alpha></el-color-picker>
         </el-radio>
         <el-radio v-model="radio" label="2">
           图片 <el-button icon="el-icon-upload">上传图片</el-button>
@@ -20,7 +20,7 @@
       </el-col>
     </el-row>
     <!--画布控制区域-->
-    <div id="container" class="container" :style="{height: cheight + 'px'}">
+    <div id="container" class="container" :style="{height: cheight + 'px', background: background}">
       <!--<div class="assembly-item noselect" v-for="(item, i) in layoutData.elementList" :key="i" :style="item.style">-->
       <!--<table>-->
       <!--<tr>-->
@@ -30,7 +30,7 @@
       <!--<div class="">{{item.name}}</div>-->
       <!--{{item.name}}-->
       <!--</div>-->
-      <template v-for="(item, i) in layoutData.elementList">
+      <template v-for="(item, i) in elementList">
         <vue-draggable-resizable
           class="assembly-item"
           :key="i"
@@ -39,10 +39,13 @@
           :resizable="true"
           :x="item.style.left"
           :y="item.style.top"
-          :w="item.style.width"
-          :h="item.style.height"
+          :w="100"
+          :h="100"
           :z="item.style['z-index']"
-          :style="{background: item.style.background}"
+          :style="{background: item.style.background,
+            width: item.style.width,
+            height: item.style.height}"
+          :snap="true"
           @dragging="onDrag"
           @resizing="onResize">
           <p class="noselect">{{ item.name }}</p>
@@ -68,7 +71,7 @@ export default {
       screenWidth: document.body.clientWidth,
       width: 1920,
       height: 1080,
-      background: '#D8D8D8',
+      background: 'rgba(216, 216, 216, 1)',
       cheight: 200,
       rate: 1, // 缩放比例
       elementList: []
@@ -77,51 +80,55 @@ export default {
   methods: {
     // 设置画布高度
     getLayoutHeight () {
+      const self = this
       let container = document.getElementById('container')
       if (container) {
         let width = container.offsetWidth
         // let height = container.offsetHeight
-        let rate = Number((width / this.layoutData.width).toFixed(2))
+        let rate = Math.round(width / this.layoutData.width * 100) / 100
         this.rate = rate
-        this.cheight = Math.round(rate * this.layoutData.height)
-        this.resetLayoutSize()
+        this.cheight = Math.round(rate * this.layoutData.height * 100) / 100
+        this.$nextTick(() => {
+          self.resetLayoutSize()
+        })
       }
     },
     resetLayoutSize () {
       const self = this
-      this._.each(this.layoutData.elementList, item => {
-        // let width = Number(item.style.width.replace('px', ''))
-        // let height = Number(item.style.height.replace('px', ''))
-        // let top = Number(item.style.top.replace('px', ''))
-        // let left = Number(item.style.left.replace('px', ''))
-        // item.style.width = width * self.rate + 'px'
-        // item.style.height = height * self.rate + 'px'
-        // item.style.top = top * self.rate + 'px'
-        // item.style.left = left * self.rate + 'px'
-        let width = item.style.width * (self.rate * 100) / 100
-        let height = item.style.height * (self.rate * 100) / 100
-        let top = item.style.top * (self.rate * 100) / 100
-        let left = item.style.left * (self.rate * 100) / 100
-        item.style.width = Number(width)
-        item.style.height = Number(height)
-        item.style.top = Number(top)
-        item.style.left = Number(left)
+      this._.each(this.elementList, item => {
+        console.log(self.rate)
+        let width = Math.round(item.style.width * self.rate * 100) / 100
+        let height = Math.round(item.style.height * self.rate * 100) / 100
+        let top = Math.round(item.style.top * self.rate * 100) / 100
+        let left = Math.round(item.style.left * self.rate * 100) / 100
+        item.style.width = width
+        item.style.height = height
+        item.style.top = top
+        item.style.left = left
       })
-      console.log(this.layoutData)
+      console.log(this.elementList)
     },
     createElement () {
 
     },
     onResize: function (x, y, width, height) {
-      this.x = x
-      this.y = y
-      this.width = width
-      this.height = height
+      let activeWeight = this._.find(this.elementList, item => {
+        return item.active
+      })
+      if (activeWeight) {
+        activeWeight.style.left = x
+        activeWeight.style.top = y
+        activeWeight.style.width = width
+        activeWeight.style.height = height
+      }
     },
     onDrag: function (x, y) {
       this.x = x
       this.y = y
     }
+  },
+  created () {
+    this.elementList = this.layoutData.elementList
   },
   mounted () {
     const self = this

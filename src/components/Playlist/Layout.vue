@@ -213,8 +213,8 @@ export default {
             style: {
               top: 70,
               left: 70,
-              width: 200,
-              height: 200,
+              width: 400,
+              height: 400,
               background: this.randomBgColor(),
               'z-index': 1
             }
