@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 // import qs from 'qs'
-import { Message, Loading } from 'element-ui'
+import { MessageBox, Message, Loading } from 'element-ui'
 import VueCookies from 'vue-cookies'
 
 // 响应时间
@@ -16,6 +16,8 @@ Vue.prototype.$static = ''
 
 const cookies = VueCookies
 
+const vue = Vue
+
 // 配置接口地址
 axios.defaults.baseURL = process.env.API_ROOT
 var loadingInstance
@@ -28,10 +30,8 @@ axios.interceptors.request.use(
       spinner: 'el-icon-loading',
       background: 'rgba(0, 0, 0, 0.7)'
     })
-    // const token = cookies.get('token')
-    const token = 'eyJleHAiOjE1MzY4NDAyMTgsImlhdCI6MTUzNjIzNTQxOCwiYWxnIjoiSFMyNTYifQ.eyJ1c2VybmFtZSI6Iis4NjE4MzEyMzQ1Njc4In0.xaOBcGAj-np-yYKK2cU463DVUmX9E8y_NDu-vOtr_ag'
+    const token = cookies.get('Info')
     if (token) {
-      console.log(token)
       config.headers.common['Authorization'] = 'Bearer ' + token
     }
     if (config.method === 'post') {
@@ -48,13 +48,21 @@ axios.interceptors.request.use(
 // 返回状态判断(添加响应拦截器)
 axios.interceptors.response.use(
   res => {
-    // if (res.status === 200) {
-    loadingInstance.close()
-    return res
-    // } else {
-    //   loadingInstance.close()
-    //   Message.error(res.data.message)
-    // }
+    if (200 <= res.status < 300) {
+      if (res.config.headers.Authorization) {
+        loadingInstance.close()
+      } else {
+        MessageBox('身份验证失败，请重新登录！', '温馨提示', {
+          confirmButtonText: '确定'
+        }).then(() => {
+          window.location = '/'
+        })
+      }
+      return res
+    } else {
+      loadingInstance.close()
+      Message.error(res.data.message)
+    }
   },
   err => {
     loadingInstance.close()
@@ -70,10 +78,10 @@ export function post (url, params) {
       .post(url, params)
       .then(
         res => {
-          resolve(res.data)
+          resolve(res)
         },
         err => {
-          reject(err.data)
+          reject(err)
         }
       )
       .catch(err => {

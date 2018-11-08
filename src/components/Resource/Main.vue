@@ -22,7 +22,7 @@
                   添加<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item>网址</el-dropdown-item>
+                  <a @click="dialogUrl = true"><el-dropdown-item>网址</el-dropdown-item></a>
                   <el-dropdown-item>富文本</el-dropdown-item>
                   <el-dropdown-item>滚动字幕</el-dropdown-item>
                 </el-dropdown-menu>
@@ -32,6 +32,22 @@
               <el-button>下载</el-button>
               <el-button>删除</el-button>
             </el-col>
+            <!--网址-->
+            <el-dialog title="添加网址" :visible.sync="dialogUrl">
+              <el-form :model="formUrl">
+                <el-form-item label="名称：" :label-width="formLabelWidth">
+                  <el-input v-model="formUrl.name" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="网址：" :label-width="formLabelWidth">
+                  <el-input v-model="formUrl.data" autocomplete="off"></el-input>
+                </el-form-item>
+              </el-form>
+              <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogUrl = false">取 消</el-button>
+                <el-button type="primary" @click="addUrl">确 定</el-button>
+              </div>
+            </el-dialog>
+            <!--网址-->
           </el-row>
         </el-header>
         <el-container class="resource-list-container">
@@ -49,7 +65,7 @@
                     <span>全部文件</span>
                   </template>
                 </el-menu-item>
-                <el-menu-item :index="i.toString()" v-for="(item, i) in tags" :key="i" @click="changeTags(item.name)">
+                <el-menu-item :index="i.toString()" v-for="(item, i) in tags" :key="i" @click="changeTags(item.id)">
                   <!--<i class="el-icon-menu"></i>-->
                   <span slot="title">{{item.name}}</span>
                 </el-menu-item>
@@ -141,37 +157,37 @@ export default {
       tagsName: '',
       tags: [
         {
-          id: 1,
+          id: 'VIDEO',
           name: '视频',
           checked: false
         },
         {
-          id: 2,
+          id: 'IMAGE',
           name: '图片',
           checked: false
         },
         {
-          id: 3,
+          id: 'AUDIO',
           name: '音频',
           checked: false
         },
         {
-          id: 4,
+          id: 'PDF',
           name: 'PDF',
           checked: false
         },
         {
-          id: 5,
+          id: 'URL',
           name: '网址',
           checked: false
         },
         {
-          id: 6,
+          id: 'RICHTEXT',
           name: '富文本',
           checked: false
         },
         {
-          id: 7,
+          id: 'MARQUEE',
           name: '滚动字幕',
           checked: false
         }
@@ -201,7 +217,16 @@ export default {
       currentPage: 1,
       pageSize: 20,
       total: 50,
-      resourceInfoVisible: false
+      resourceInfoVisible: false,
+      dialogUrl: false,
+      formLabelWidth: '120px',
+      formUrl: {
+        name: '',
+        data: '',
+        type: 'URL',
+        size: 0,
+        parentid: 0
+      }
     }
   },
   methods: {
@@ -243,11 +268,12 @@ export default {
       let self = this
       let params = {
         parent: 0,
-        type: this.tagsName,
-        month: '',
         keyword: this.search,
         page: this.currentPage,
         rows: this.pageSize
+      }
+      if (this.tagsName) {
+        params.type = this.tagsName
       }
       this.$api.api2.getResourceList(params)
         .then(response => {
@@ -258,6 +284,23 @@ export default {
         })
         .catch(error => {
           console.log(error)
+          self.$alert('获取资源列表失败', '温馨提示', {
+            confirmButtonText: '确定'
+          })
+        })
+    },
+    addUrl () {
+      let self = this
+      this.$api.api2.addResource(this.formUrl)
+        .then(response => {
+          console.log(response)
+          self.dialogUrl = false
+        })
+        .catch(error => {
+          console.log(error)
+          self.$alert('获取资源列表失败', '温馨提示', {
+            confirmButtonText: '确定'
+          })
         })
     }
   },

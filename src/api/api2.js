@@ -33,18 +33,18 @@ export default {
   },
   // 获取模版列表
   getTemplateList (params) {
-    return get('/template', params)
+    return get('/templates', params)
   },
   // 增加模版
   addTemplate (params) {
-    return post('/template', params)
+    return post('/templates', params)
   },
   // 获取资源列表
   getResourceList (params) {
-    return get('/resource', params)
+    return get('/resources', params)
   },
   // 添加资源
   addResource (params) {
-    return post('/resource', params)
+    return post('/resources', params)
   }
 }

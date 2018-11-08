@@ -102,15 +102,44 @@ export default {
     },
     submitForm (formName) {
       const self = this
+      // this.$refs[formName].validate((valid) => {
+      //   if (valid) {
+      //     this.getVerifyCode()
+      //   } else {
+      //     console.log('error submit!!')
+      //     return false
+      //   }
+      // })
+      // self.$router.push('/Home')
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.getVerifyCode()
+          this.$api.api1.login({
+            username: self.ruleForm.username,
+            password: self.ruleForm.password
+          })
+            .then(res => {
+              if (res.status === 201) {
+                self.$cookies.set('Info', res.data.token, {expires: 12})
+                sessionStorage.setItem('ms_username', self.ruleForm.username)
+                self.$router.push('/Home')
+              } else {
+                self.$message({
+                  message: '登录失败：' + res,
+                  type: 'warning'
+                })
+              }
+            })
+            .catch(error => {
+              console.log(error)
+              self.$alert('登录失败，请稍后重试', '温馨提示', {
+                confirmButtonText: '确定'
+              })
+            })
         } else {
           console.log('error submit!!')
           return false
         }
       })
-      // self.$router.push('/Home')
     },
     submitPhone (formName) {
       const self = this
@@ -124,7 +153,7 @@ export default {
               let data = response.data
               // console.log(data)
               if (data.code === 1) {
-                self.$cookies.set('TZManage', data.object, {expires: 12})
+                // self.$cookies.set('TZManage', data.object, {expires: 12})
                 localStorage.setItem('ms_username', self.ruleForm.username)
                 self.$router.push('/Home')
               } else {
