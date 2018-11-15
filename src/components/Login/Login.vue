@@ -120,6 +120,7 @@ export default {
             .then(res => {
               if (res.status === 201) {
                 self.$cookies.set('Info', res.data.token, {expires: 12})
+                console.log(self.ruleForm.username)
                 sessionStorage.setItem('ms_username', self.ruleForm.username)
                 self.$router.push('/Home')
               } else {
@@ -154,7 +155,7 @@ export default {
               // console.log(data)
               if (data.code === 1) {
                 // self.$cookies.set('TZManage', data.object, {expires: 12})
-                localStorage.setItem('ms_username', self.ruleForm.username)
+                sessionStorage.setItem('ms_username', self.ruleForm.username)
                 self.$router.push('/Home')
               } else {
                 self.$alert(data.message, '温馨提示', {

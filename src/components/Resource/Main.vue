@@ -23,7 +23,7 @@
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
                   <a @click="dialogUrl = true"><el-dropdown-item>网址</el-dropdown-item></a>
-                  <el-dropdown-item>富文本</el-dropdown-item>
+                  <a @click="dialogEditor = true"><el-dropdown-item>富文本</el-dropdown-item></a>
                   <el-dropdown-item>滚动字幕</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
@@ -33,13 +33,13 @@
               <el-button>删除</el-button>
             </el-col>
             <!--网址-->
-            <el-dialog title="添加网址" :visible.sync="dialogUrl">
+            <el-dialog title="网址" :visible.sync="dialogUrl">
               <el-form :model="formUrl">
                 <el-form-item label="名称：" :label-width="formLabelWidth">
-                  <el-input v-model="formUrl.name" autocomplete="off"></el-input>
+                  <el-input v-model="formUrl.name" autocomplete="off" :disabled="isOpenInfo"></el-input>
                 </el-form-item>
                 <el-form-item label="网址：" :label-width="formLabelWidth">
-                  <el-input v-model="formUrl.data" autocomplete="off"></el-input>
+                  <el-input v-model="formUrl.data" autocomplete="off" :disabled="isOpenInfo"></el-input>
                 </el-form-item>
               </el-form>
               <div slot="footer" class="dialog-footer">
@@ -48,6 +48,11 @@
               </div>
             </el-dialog>
             <!--网址-->
+            <!--富文本-->
+            <el-dialog title="富文本" :visible.sync="dialogEditor">
+              <editor></editor>
+            </el-dialog>
+            <!--富文本-->
           </el-row>
         </el-header>
         <el-container class="resource-list-container">
@@ -100,19 +105,25 @@
                   label="资源名称">
                 </el-table-column>
                 <el-table-column
-                  prop="playing"
+                  prop="type"
+                  label="资源类型">
+                </el-table-column>
+                <el-table-column
+                  prop="size"
                   label="大小"
                   sortable>
                 </el-table-column>
                 <el-table-column
+                  prop="createTime"
                   label="创建时间"
+                  :formatter="createTimeToTime"
                   sortable>
-                  <template slot-scope="scope">{{ scope.row.datatime }}</template>
                 </el-table-column>
                 <el-table-column
+                  prop="updateTime"
                   label="修改时间"
+                  :formatter="updateTimeToTime"
                   sortable>
-                  <template slot-scope="scope">{{ scope.row.datatime }}</template>
                 </el-table-column>
                 <el-table-column
                   fixed="right"
@@ -147,13 +158,16 @@
 
 <script>
 // import info from './info.vue'
+import editor from './Editor.vue'
 export default {
   components: {
-    // info
+    // info,
+    editor
   },
   data () {
     return {
       search: '',
+      isOpenInfo: false,
       tagsName: '',
       tags: [
         {
@@ -219,6 +233,7 @@ export default {
       total: 50,
       resourceInfoVisible: false,
       dialogUrl: false,
+      dialogEditor: false,
       formLabelWidth: '120px',
       formUrl: {
         name: '',
@@ -254,10 +269,18 @@ export default {
     },
     openInfo (row) {
       console.log(row)
+      if (row.type === 'URL') {
+        this.openInfoUrl(row)
+      }
       this.resourceInfoVisible = true
     },
     closeInfo () {
       this.resourceInfoVisible = false
+    },
+    openInfoUrl (row) {
+      this.dialogUrl = true
+      this.isOpenInfo = true
+      this.formUrl.name = row.name
     },
     // 切换状态
     changeTags (name) {
@@ -276,11 +299,11 @@ export default {
         params.type = this.tagsName
       }
       this.$api.api2.getResourceList(params)
-        .then(response => {
-          console.log(response)
-          self.currentPage = response.page
-          self.total = response.total
-          self.tableData = response.terms
+        .then(res => {
+          // console.log(res)
+          self.currentPage = res.page
+          self.total = res.total
+          self.tableData = res.resources
         })
         .catch(error => {
           console.log(error)
@@ -293,7 +316,7 @@ export default {
       let self = this
       this.$api.api2.addResource(this.formUrl)
         .then(response => {
-          console.log(response)
+          // console.log(response)
           self.dialogUrl = false
         })
         .catch(error => {
@@ -302,7 +325,25 @@ export default {
             confirmButtonText: '确定'
           })
         })
-    }
+    },
+    createTimeToTime (row, column) {
+      var date = new Date(row.createTime)
+      return this.timestampToTime(date)
+    },
+    updateTimeToTime (row, column) {
+      var date = new Date(row.updateTime)
+      return this.timestampToTime(date)
+    },
+    // 时间戳转换成时间
+    timestampToTime (date) {
+      let Y = date.getFullYear() + '-'
+      let M = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) + '-' : date.getMonth() + 1 + '-'
+      let D = date.getDate() < 10 ? '0' + date.getDate() + ' ' : date.getDate() + ' '
+      let h = date.getHours() < 10 ? '0' + date.getHours() + ':' : date.getHours() + ':'
+      let m = date.getMinutes()  < 10 ? '0' + date.getMinutes() + ':' : date.getMinutes() + ':'
+      let s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
+      return Y + M + D + h + m + s
+    },
   },
   created () {
     this.getResourceList()

@@ -19,6 +19,7 @@ Vue.config.productionTip = false
 
 Vue.prototype.$api = api
 Vue.prototype._ = _
+// Vue.prototype.$cookies = VueCookies
 
 /* eslint-disable no-new */
 new Vue({

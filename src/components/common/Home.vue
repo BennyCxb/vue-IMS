@@ -14,10 +14,10 @@
 
         <el-dropdown>
           <!--<i class="el-icon-setting" style="margin-right: 15px"></i>-->
-          <span class="el-dropdown-link">王小虎</span>
+          <span class="el-dropdown-link">{{nickname}}</span>
           <el-dropdown-menu slot="dropdown">
             <router-link to="/Personal"><el-dropdown-item>查看</el-dropdown-item></router-link>
-            <router-link to="/Login"><el-dropdown-item>退出登录</el-dropdown-item></router-link>
+            <a @click="logout"><el-dropdown-item>退出登录</el-dropdown-item></a>
           </el-dropdown-menu>
         </el-dropdown>
         <!--<span>王小虎</span>-->
@@ -36,14 +36,33 @@
 <script>
 import vHead from './Header.vue'
 import vSidebar from './Sidebar.vue'
+
 export default {
   components: {
     vHead, vSidebar
   },
   data () {
     return {
-      isCollapse: false
+      isCollapse: false,
+      username: sessionStorage.getItem('ms_username'),
+      nickname: ''
     }
+  },
+  methods: {
+    logout () {
+      this.$cookies.remove('Info')
+      this.$router.replace({ path: '/Login' })
+    },
+    getUser () {
+      let self = this
+      this.$api.api2.getUser({}, this.username)
+        .then(res => {
+          self.nickname = res.nickname || '未命名'
+        })
+    }
+  },
+  created () {
+    this.getUser()
   }
 }
 </script>

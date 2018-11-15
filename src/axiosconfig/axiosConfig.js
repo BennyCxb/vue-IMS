@@ -51,12 +51,14 @@ axios.interceptors.response.use(
     if (200 <= res.status < 300) {
       if (res.config.headers.Authorization) {
         loadingInstance.close()
-      } else {
+      } else if (cookies.get('Info')) {
         MessageBox('身份验证失败，请重新登录！', '温馨提示', {
           confirmButtonText: '确定'
         }).then(() => {
           window.location = '/'
         })
+      } else {
+        loadingInstance.close()
       }
       return res
     } else {

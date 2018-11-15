@@ -46,5 +46,8 @@ export default {
   // 添加资源
   addResource (params) {
     return post('/resources', params)
+  },
+  getUser (params, username) {
+    return get(`/users/${username}`, params)
   }
 }
