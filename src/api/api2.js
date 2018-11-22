@@ -48,11 +48,17 @@ export default {
   addResource (params) {
     return post('/resources', params)
   },
+  // 修改资源
   updateResource (id, params) {
     return post(`/resources/${id}`, params)
   },
+  // 删除资源
   deleteResource (id) {
     return Delete(`/resources/${id}`)
+  },
+  // 获取播单列表
+  getPlayList (params) {
+    return get('/playlists', params)
   },
   getUser (params, username) {
     return get(`/users/${username}`, params)

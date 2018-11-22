@@ -41,9 +41,9 @@
             <el-col :span="15" class="text-left">
               <el-button-group>
                 <el-button :type="!status ? 'primary' : ''" @click="changeStatus(null)">全部（{{total}}）</el-button>
-                <el-button :type="status === 1 ? 'primary' : ''" @click="changeStatus(1)">在线（）</el-button>
-                <el-button :type="status === 2 ? 'primary' : ''" @click="changeStatus(2)">休眠（）</el-button>
-                <el-button :type="status === 3 ? 'primary' : ''" @click="changeStatus(3)">离线（）</el-button>
+                <el-button :type="status === 1 ? 'primary' : ''" @click="changeStatus(1)">在线（{{num.online}}）</el-button>
+                <el-button :type="status === 2 ? 'primary' : ''" @click="changeStatus(2)">休眠（{{num.offline}}）</el-button>
+                <el-button :type="status === 3 ? 'primary' : ''" @click="changeStatus(3)">离线（{{num.sleep}}）</el-button>
               </el-button-group>
             </el-col>
             <el-col :span="9" class="text-right">
@@ -189,7 +189,12 @@ export default {
       total: 0, // 总数
       termInfoVisible: false,
       termConfigVisible: false,
-      termid: ''
+      termid: '',
+      num: {
+        online: 0,
+        offline: 0,
+        sleep: 0
+      }
     }
   },
   methods: {
@@ -241,9 +246,11 @@ export default {
       const self = this
       let params = {
         status: this.status,
-        tagname: this.tagsName,
         page: this.currentPage,
         rows: this.pageSize
+      }
+      if (this.tagsName) {
+        params.params = this.params
       }
       this.$api.api2.getTermlist(params)
         .then(response => {
@@ -251,6 +258,15 @@ export default {
           self.currentPage = response.page
           self.total = response.total
           self.tableData = response.terms
+          self._.each(response.terms, item => {
+            if (item.status.name === 'Online') {
+              self.num.online++
+            } else if (item.status.name === 'Offline') {
+              self.num.offline++
+            } else if (item.status.name === 'Sleep') {
+              self.num.sleep++
+            }
+          })
         })
     },
     termTagsAdd () {
@@ -303,7 +319,7 @@ export default {
                 message: '操作成功！',
                 type: 'success'
               })
-              self.getTermTagslist()
+              self.getTermlist()
             } else {
               self.$message.error(response.message)
             }

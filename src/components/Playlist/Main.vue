@@ -8,11 +8,13 @@
       <el-main>
         <el-header class="term-list-header">
           <el-row>
-            <el-col :span="12" class="text-left">
+            <el-col :span="14" class="text-left">
               <el-button-group>
-                <el-button plain>全部（1）</el-button>
-                <el-button plain>未审核（1）</el-button>
-                <el-button plain>已审核（1）</el-button>
+                <el-button plain :type="!status ? 'primary' : ''" @click="changeStatus(null)">全部（{{total}}）</el-button>
+                <el-button plain :type="status === 'unreview' ? 'primary' : ''" @click="changeStatus('unreview')">未审核（1）</el-button>
+                <el-button plain :type="status === 'accept' ? 'primary' : ''" @click="changeStatus('accept')">已通过（1）</el-button>
+                <el-button plain :type="status === 'refuse' ? 'primary' : ''" @click="changeStatus('refuse')">未通过（1）</el-button>
+                <el-button plain :type="status === 'publish' ? 'primary' : ''" @click="changeStatus('publish')">已发布（1）</el-button>
               </el-button-group>
               <el-select v-model="playValue" placeholder="播单类型">
                 <el-option
@@ -23,7 +25,7 @@
                 </el-option>
               </el-select>
             </el-col>
-            <el-col :span="12" class="text-right">
+            <el-col :span="10" class="text-right">
               <router-link to="/Playlist/Layout"><el-button type="primary">新建播单</el-button></router-link>
               <el-button>生成离线播单</el-button>
               <el-button>发布</el-button>
@@ -33,14 +35,14 @@
           </el-row>
         </el-header>
         <el-main class="term-list-main">
-          <div class="term-list-box">
-            <el-alert
-              title="消息提示的文案"
-              type="info"
-              show-icon
-              :closable="false">
-            </el-alert>
-          </div>
+          <!--<div class="term-list-box">-->
+            <!--<el-alert-->
+              <!--title="消息提示的文案"-->
+              <!--type="info"-->
+              <!--show-icon-->
+              <!--:closable="false">-->
+            <!--</el-alert>-->
+          <!--</div>-->
 
           <div class="term-list-box">
             <el-table
@@ -61,29 +63,29 @@
                 width="120">
               </el-table-column>
               <el-table-column
-                prop="playing"
+                prop="type"
                 label="播单类型"
                 width="120">
               </el-table-column>
               <el-table-column
-                prop="playing"
+                prop="creator"
                 label="提交人"
                 width="120">
               </el-table-column>
               <el-table-column
-                prop="name"
+                prop="updateTime"
                 label="修改时间"
                 sortable>
-                <template slot-scope="scope">{{ scope.row.datatime }}</template>
+                <template slot-scope="scope">{{ scope.row.updateTime }}</template>
               </el-table-column>
               <el-table-column
-                prop="name"
+                prop="reviewer"
                 label="审核人">
               </el-table-column>
               <el-table-column
-                prop="name"
+                prop="reviewTime"
                 label="审核时间">
-                <template slot-scope="scope">{{ scope.row.datatime }}</template>
+                <template slot-scope="scope">{{ scope.row.reviewTime }}</template>
               </el-table-column>
               <el-table-column
                 prop="status"
@@ -95,7 +97,7 @@
                     <span>未审核</span>
                   </span>
                   <span v-else-if="scope.row.status == 2">
-                    <span>已审核</span>
+                    <span>已通过</span>
                   </span>
                   <span v-else-if="scope.row.status == 3">
                     <span>未通过</span>
@@ -151,69 +153,25 @@ export default {
   },
   data () {
     return {
-      data: [{
-        label: '所有终端',
-        children: [{
-          label: '未命名终端',
-          children: [{
-            label: '三级 2-1-1'
-          }]
-        }, {
-          label: '分组标签一',
-          children: [{
-            label: '三级 2-2-1'
-          }]
-        }]
-      }],
-      defaultProps: {
-        children: 'children',
-        label: 'label'
-      },
-      tableData: [{
-        datatime: '2016-05-02 10:30:00',
-        name: '未命名终端',
-        playing: '默认播单',
-        status: 1,
-        tags: ['分组标签一', '分组标签二']
-      }, {
-        datatime: '2016-05-04 10:30:00',
-        name: '未命名终端',
-        playing: '默认播单',
-        status: 2,
-        tags: ['分组标签二']
-      }, {
-        datatime: '2016-05-01 10:30:00',
-        name: '终端1',
-        playing: '默认播单',
-        status: 1,
-        tags: ['分组标签一']
-      }, {
-        datatime: '2016-05-03 10:30:00',
-        name: '未命名终端2',
-        playing: '默认播单',
-        status: 3,
-        tags: []
-      }],
+      tableData: [],
       playOptions: [{
-        value: '选项1',
-        label: '黄金糕'
+        value: 'ordinary',
+        label: '普通'
       }, {
-        value: '选项2',
-        label: '双皮奶'
+        value: 'intercut',
+        label: '随机'
       }, {
-        value: '选项3',
-        label: '蚵仔煎'
+        value: 'loop',
+        label: '循环'
       }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
+        value: 'emergent',
+        label: '紧急'
       }],
-      playValue: '',
+      status: '',
+      playValue: 'ordinary',
       currentPage: 1,
       pageSize: 20,
-      total: 50,
+      total: 0,
       termInfoVisible: false
     }
   },
@@ -246,7 +204,46 @@ export default {
     },
     closeInfo () {
       this.termInfoVisible = false
+    },
+    /**
+     * 获取播单列表
+     */
+    getPlayList() {
+      const self = this
+      const parmes = {
+        type: this.playValue,
+        // keyword: '',
+        page: this.currentPage,
+        rows: this.pageSize
+      }
+      if (this.status) {
+        parmes.status = this.status
+      }
+      this.$api.api2.getPlayList(parmes)
+        .then(res => {
+          console.log(res)
+          self.currentPage = res.pages
+          self.total = res.total
+          self.tableData = res.terms
+          // self._.each(res.terms, item => {
+          //   if (item.status === 'Online') {
+          //     self.num.online++
+          //   } else if (item.status === 'Offline') {
+          //     self.num.offline++
+          //   } else if (item.status === 'Sleep') {
+          //     self.num.sleep++
+          //   }
+          // })
+        })
+    },
+    // 切换状态
+    changeStatus (status) {
+      this.status = status
+      this.getPlayList()
     }
+  },
+  created () {
+    this.getPlayList()
   }
 }
 </script>

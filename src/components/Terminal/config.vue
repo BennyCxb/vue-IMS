@@ -9,10 +9,10 @@
       </el-form-item>
       <el-form-item label="屏幕旋转:" :label-width="formLabelWidth">
         <el-select v-model="form.rotate" clearable placeholder="请选择">
-          <el-option label="0°" value="0"></el-option>
-          <el-option label="90°" value="90"></el-option>
-          <el-option label="180°" value="180"></el-option>
-          <el-option label="270°" value="270"></el-option>
+          <el-option label="0°" :value="0"></el-option>
+          <el-option label="90°" :value="90"></el-option>
+          <el-option label="180°" :value="180"></el-option>
+          <el-option label="270°" :value="270"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="工作时间:" :label-width="formLabelWidth">
@@ -143,7 +143,8 @@ export default {
     },
     getTermInfo () {
       const self = this
-      this.$api.api2.getTermInfo({}, this.termid)
+      console.log(this.termid)
+      this.$api.api2.getTermConfig({}, this.termid)
         .then(response => {
           // console.log(response)
           self.form = Object.assign(self.form, response)
