@@ -40,6 +40,11 @@ export default new Router({
           component: resolve => require(['../components/Resource/Main.vue'], resolve)
         },
         {
+          path: '/Resource/Info',
+          name: 'resourceInfo',
+          component: resolve => require(['../components/Resource/Info.vue'], resolve)
+        },
+        {
           path: '/Analysis',
           component: resolve => require(['../components/Analysis/Main.vue'], resolve)
         },

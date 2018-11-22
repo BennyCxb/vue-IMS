@@ -7,6 +7,8 @@
           placeholder="搜索"
           suffix-icon="el-icon-search"
           v-model="search"
+          @blur="getResourceList"
+          @keyup.enter.native="getResourceList"
           clearable>
         </el-input>
       </div>
@@ -22,45 +24,20 @@
                   添加<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
-                  <a @click="dialogUrl = true"><el-dropdown-item>网址</el-dropdown-item></a>
-                  <a @click="dialogEditor = true"><el-dropdown-item>富文本</el-dropdown-item></a>
-                  <el-dropdown-item>滚动字幕</el-dropdown-item>
+                  <a @click="addInfo('URL')"><el-dropdown-item>网址</el-dropdown-item></a>
+                  <a @click="addInfo('RICHTEXT')"><el-dropdown-item>富文本</el-dropdown-item></a>
+                  <a @click="addInfo('MARQUEE')"><el-dropdown-item>滚动字幕</el-dropdown-item></a>
                 </el-dropdown-menu>
               </el-dropdown>
-              <el-button>新建文件夹</el-button>
-              <el-button>移动到</el-button>
-              <el-button>下载</el-button>
-              <el-button>删除</el-button>
+              <!--<el-button>新建文件夹</el-button>-->
+              <!--<el-button>移动到</el-button>-->
+              <!--<el-button>下载</el-button>-->
+              <!--<el-button>删除</el-button>-->
             </el-col>
-            <!--网址-->
-            <el-dialog title="网址" :visible.sync="dialogUrl">
-              <el-form :model="formUrl">
-                <el-form-item label="名称：" :label-width="formLabelWidth">
-                  <el-input v-model="formUrl.name" autocomplete="off" :disabled="isOpenInfo"></el-input>
-                </el-form-item>
-                <el-form-item label="网址：" :label-width="formLabelWidth">
-                  <el-input v-model="formUrl.data" autocomplete="off" :disabled="isOpenInfo"></el-input>
-                </el-form-item>
-              </el-form>
-              <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogUrl = false">取 消</el-button>
-                <el-button type="primary" @click="addUrl">确 定</el-button>
-              </div>
-            </el-dialog>
-            <!--网址-->
-            <!--富文本-->
-            <el-dialog title="富文本" :visible.sync="dialogEditor">
-              <editor></editor>
-            </el-dialog>
-            <!--富文本-->
           </el-row>
         </el-header>
         <el-container class="resource-list-container">
           <el-aside class="resource-list-category" width="160px">
-            <!--<ul>-->
-              <!--<li class="resource-list-category-item">全部文件</li>-->
-              <!--<li class="resource-list-category-item">视频</li>-->
-            <!--</ul>-->
             <el-main class="term-sort-main">
               <el-menu
                 default-active="99"
@@ -105,8 +82,16 @@
                   label="资源名称">
                 </el-table-column>
                 <el-table-column
-                  prop="type"
                   label="资源类型">
+                  <template slot-scope="scope">
+                    <el-tag v-if="scope.row.type === 'URL'">网页</el-tag>
+                    <el-tag v-else-if="scope.row.type === 'RICHTEXT'">富文本</el-tag>
+                    <el-tag v-else-if="scope.row.type === 'MARQUEE'">滚动字幕</el-tag>
+                    <el-tag v-else-if="scope.row.type === 'VIDEO'">视频</el-tag>
+                    <el-tag v-else-if="scope.row.type === 'IMAGE'">图片</el-tag>
+                    <el-tag v-else-if="scope.row.type === 'AUDIO'">音频</el-tag>
+                    <el-tag v-else-if="scope.row.type === 'PDF'">PDF</el-tag>
+                  </template>
                 </el-table-column>
                 <el-table-column
                   prop="size"
@@ -130,9 +115,9 @@
                   label="操作"
                   width="150">
                   <template slot-scope="scope">
-                    <el-button @click="openInfo(scope.row)" type="text">预览</el-button>
-                    <el-button type="text">编辑</el-button>
-                    <el-button type="text">删除</el-button>
+                    <el-button @click="openInfo(scope.row.type, scope.row)" type="text">预览</el-button>
+                    <el-button @click="editInfo(scope.row.type, scope.row)" type="text">编辑</el-button>
+                    <el-button @click="deleteResource(scope.row)" type="text">删除</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -148,7 +133,6 @@
                 </el-pagination>
               </div>
             </div>
-            <!--<info :resourceInfoVisible="resourceInfoVisible" @closeInfo="closeInfo"></info>-->
           </el-main>
         </el-container>
       </el-main>
@@ -157,13 +141,7 @@
 </template>
 
 <script>
-// import info from './info.vue'
-import editor from './Editor.vue'
 export default {
-  components: {
-    // info,
-    editor
-  },
   data () {
     return {
       search: '',
@@ -267,26 +245,52 @@ export default {
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`)
     },
-    openInfo (row) {
-      console.log(row)
-      if (row.type === 'URL') {
-        this.openInfoUrl(row)
+    addInfo (type) {
+      let params = {
+        fileType: type,
+        type: 'add'
       }
-      this.resourceInfoVisible = true
+      this.$router.push({ name: 'resourceInfo', params: params })
+    },
+    openInfo (type, row) {
+      console.log(row)
+      let params = {
+        fileType: type,
+        type: 'info',
+        resourceid: row.id
+      }
+      this.$router.push({ name: 'resourceInfo', params: params })
+    },
+    deleteResource (row) {
+      const self = this
+      this.$api.api2.deleteResource(row.id)
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+          this.$message('删除失败')
+        })
+    },
+    editInfo (type, row) {
+      let params = {
+        fileType: type,
+        type: 'edit',
+        resourceid: row.id
+      }
+      this.$router.push({ name: 'resourceInfo', params: params })
     },
     closeInfo () {
       this.resourceInfoVisible = false
-    },
-    openInfoUrl (row) {
-      this.dialogUrl = true
-      this.isOpenInfo = true
-      this.formUrl.name = row.name
     },
     // 切换状态
     changeTags (name) {
       this.tagsName = name
       this.getResourceList()
     },
+    /**
+     * 获取资源列表
+     */
     getResourceList () {
       let self = this
       let params = {
@@ -327,11 +331,11 @@ export default {
         })
     },
     createTimeToTime (row, column) {
-      var date = new Date(row.createTime)
+      let date = new Date(row.createTime)
       return this.timestampToTime(date)
     },
     updateTimeToTime (row, column) {
-      var date = new Date(row.updateTime)
+      let date = new Date(row.updateTime)
       return this.timestampToTime(date)
     },
     // 时间戳转换成时间
@@ -343,7 +347,7 @@ export default {
       let m = date.getMinutes()  < 10 ? '0' + date.getMinutes() + ':' : date.getMinutes() + ':'
       let s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
       return Y + M + D + h + m + s
-    },
+    }
   },
   created () {
     this.getResourceList()

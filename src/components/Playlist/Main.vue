@@ -138,7 +138,6 @@
               </el-pagination>
             </div>
           </div>
-          <!--<info :termInfoVisible="termInfoVisible" @closeInfo="closeInfo"></info>-->
         </el-main>
       </el-main>
     </el-container>
@@ -146,7 +145,6 @@
 </template>
 
 <script>
-// import info from './info.vue'
 export default {
   components: {
     // info

@@ -1,8 +1,5 @@
-import { post, get } from '../axiosconfig/axiosConfig'
+import { post, get, Delete } from '../axiosconfig/axiosConfig'
 export default {
-  getResourceList (params) {
-    return get('/resources', params)
-  },
   // 获取终端标签列表
   getTermTagslist () {
     return get('/project/termtags')
@@ -43,9 +40,19 @@ export default {
   getResourceList (params) {
     return get('/resources', params)
   },
+  // 获取资源详情
+  getResourceInfo (params, id) {
+    return get(`/resources/${id}`, params)
+  },
   // 添加资源
   addResource (params) {
     return post('/resources', params)
+  },
+  updateResource (id, params) {
+    return post(`/resources/${id}`, params)
+  },
+  deleteResource (id) {
+    return Delete(`/resources/${id}`)
   },
   getUser (params, username) {
     return get(`/users/${username}`, params)

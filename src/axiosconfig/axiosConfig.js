@@ -11,6 +11,7 @@ axios.defaults.withCredentials = false
 // 配置请求头
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
+axios.defaults.headers.delete['Content-Type'] = 'application/json;charset=UTF-8'
 // 静态资源
 Vue.prototype.$static = ''
 
@@ -105,3 +106,34 @@ export function get (url, params) {
       })
   })
 }
+export function Delete (url, params) {
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(url, params)
+      .then(
+        res => {
+          resolve(res)
+        },
+        err => {
+          reject(err)
+        }
+      )
+      .catch(err => {
+        reject(err.data)
+      })
+  })
+}
+// export function Delete (url, params) {
+//   return new Promise((resolve, reject) => {
+//     axios
+//       .delete(url, {
+//         params: params
+//       })
+//       .then(res => {
+//         resolve(res.data)
+//       })
+//       .catch(err => {
+//         reject(err.data)
+//       })
+//   })
+// }
