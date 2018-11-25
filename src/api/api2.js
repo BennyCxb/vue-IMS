@@ -62,5 +62,8 @@ export default {
   },
   getUser (params, username) {
     return get(`/users/${username}`, params)
+  },
+  updatePassword (username, params) {
+    return post(`/users/${username}/password`, params)
   }
 }

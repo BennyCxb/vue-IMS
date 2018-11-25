@@ -6,17 +6,17 @@
         <el-form-item label="帐号">
           {{username}}
         </el-form-item>
-        <el-form-item label="原密码">
-          <el-input v-model="form.oldPsw" placeholder="请输入原密码"></el-input>
+        <el-form-item label="原密码" prop="oldPsw">
+          <el-input type="password" v-model="form.oldPsw" placeholder="请输入原密码"></el-input>
         </el-form-item>
-        <el-form-item label="新密码">
-          <el-input v-model="form.newPsw" placeholder="6-16位密码，区分大小写"></el-input>
+        <el-form-item label="新密码" prop="pass">
+          <el-input type="password" v-model="form.pass" placeholder="6-16位密码，区分大小写"></el-input>
         </el-form-item>
-        <el-form-item label="确认新密码">
-          <el-input v-model="form.confilmPsw" placeholder="6-16位密码，区分大小写"></el-input>
+        <el-form-item label="确认新密码" prop="checkPass">
+          <el-input type="password" v-model="form.checkPass" placeholder="6-16位密码，区分大小写"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">保存</el-button>
+          <el-button type="primary" @click="updatePassword">保存</el-button>
           <!--<el-button>取消</el-button>-->
         </el-form-item>
       </el-form>
@@ -27,34 +27,48 @@
 <script>
 export default {
   data () {
+    let validatePass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入密码'));
+      } else {
+        if (this.form.checkPass !== '') {
+          this.$refs.form.validateField('checkPass');
+        }
+        callback();
+      }
+    }
+    let validatePass2 = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'));
+      } else if (value !== this.form.pass) {
+        callback(new Error('两次输入密码不一致!'));
+      } else {
+        callback();
+      }
+    }
     return {
-      username: 'zhangfuguan',
+      username: sessionStorage.getItem('ms_username'),
       form: {
         oldPsw: '',
-        newPsw: '',
-        confilmPsw: ''
+        pass: '',
+        checkPass: ''
       },
-      rules: {}
+      rules: {
+        oldPsw: [
+          { required: true, message: '请输入原密码', trigger: 'blur' }
+        ],
+        pass: [
+          { required: true, validator: validatePass, trigger: 'blur' }
+        ],
+        checkPass: [
+          { required: true, validator: validatePass2, trigger: 'blur' }
+        ]
+      }
     }
   },
   methods: {
     onSubmit () {
       console.log('submit!')
-    },
-    handleAvatarSuccess (res, file) {
-      this.form.imageUrl = URL.createObjectURL(file.raw)
-    },
-    beforeAvatarUpload (file) {
-      const isJPG = file.type === 'image/jpeg'
-      const isLt2M = file.size / 1024 / 1024 < 2
-
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!')
-      }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
-      }
-      return isJPG && isLt2M
     },
     timer () {
       let self = this
@@ -66,6 +80,32 @@ export default {
           self.timeout = 60
         }
       }, 1000)
+    },
+    updatePassword () {
+      const self = this
+      let params = {
+        oldpassword: this.form.oldPsw,
+        password: this.form.checkPass
+      }
+      this.$api.api2.updatePassword(this.username, params)
+        .then(res => {
+          if (res.status === 200) {
+            self.form = {
+              oldPsw: '',
+              pass: '',
+              checkPass: ''
+            }
+            self.$message({
+              message: '修改密码成功!',
+              type: 'success'
+            })
+          } else {
+            self.$message.error('修改密码失败！')
+          }
+        })
+        .catch(err => {
+          self.$message.error('修改密码失败！')
+        })
     }
   }
 }

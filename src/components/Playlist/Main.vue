@@ -11,10 +11,10 @@
             <el-col :span="14" class="text-left">
               <el-button-group>
                 <el-button plain :type="!status ? 'primary' : ''" @click="changeStatus(null)">全部（{{total}}）</el-button>
-                <el-button plain :type="status === 'unreview' ? 'primary' : ''" @click="changeStatus('unreview')">未审核（1）</el-button>
-                <el-button plain :type="status === 'accept' ? 'primary' : ''" @click="changeStatus('accept')">已通过（1）</el-button>
-                <el-button plain :type="status === 'refuse' ? 'primary' : ''" @click="changeStatus('refuse')">未通过（1）</el-button>
-                <el-button plain :type="status === 'publish' ? 'primary' : ''" @click="changeStatus('publish')">已发布（1）</el-button>
+                <el-button plain :type="status === 'unreview' ? 'primary' : ''" @click="changeStatus('unreview')">未审核</el-button>
+                <el-button plain :type="status === 'accept' ? 'primary' : ''" @click="changeStatus('accept')">已通过</el-button>
+                <el-button plain :type="status === 'refuse' ? 'primary' : ''" @click="changeStatus('refuse')">未通过</el-button>
+                <el-button plain :type="status === 'publish' ? 'primary' : ''" @click="changeStatus('publish')">已发布</el-button>
               </el-button-group>
               <el-select v-model="playValue" placeholder="播单类型">
                 <el-option
