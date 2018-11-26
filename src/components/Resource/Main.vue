@@ -55,14 +55,14 @@
             </el-main>
           </el-aside>
           <el-main class="resource-list-main">
-            <div class="resource-list-box">
-              <el-alert
-                title="消息提示的文案"
-                type="info"
-                show-icon
-                :closable="false">
-              </el-alert>
-            </div>
+            <!--<div class="resource-list-box">-->
+              <!--<el-alert-->
+                <!--title="消息提示的文案"-->
+                <!--type="info"-->
+                <!--show-icon-->
+                <!--:closable="false">-->
+              <!--</el-alert>-->
+            <!--</div>-->
 
             <div class="resource-list-box">
               <el-table

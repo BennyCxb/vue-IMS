@@ -7,6 +7,8 @@
           placeholder="搜索"
           suffix-icon="el-icon-search"
           v-model="search"
+          @blur="getTemplateList"
+          @keyup.enter.native="getTemplateList"
           clearable>
         </el-input>
       </div>
@@ -23,14 +25,14 @@
           </el-row>
         </el-header>
         <el-main class="term-list-main">
-          <div class="term-list-box">
-            <el-alert
-              title="消息提示的文案"
-              type="info"
-              show-icon
-              :closable="false">
-            </el-alert>
-          </div>
+          <!--<div class="term-list-box">-->
+            <!--<el-alert-->
+              <!--title="消息提示的文案"-->
+              <!--type="info"-->
+              <!--show-icon-->
+              <!--:closable="false">-->
+            <!--</el-alert>-->
+          <!--</div>-->
 
           <div class="term-list-box">
             <el-table
@@ -90,7 +92,6 @@
               </el-pagination>
             </div>
           </div>
-          <!--<info :termInfoVisible="termInfoVisible" @closeInfo="closeInfo"></info>-->
         </el-main>
       </el-main>
     </el-container>

@@ -3,6 +3,17 @@
     <el-header class="term-header">
       播单列表
       <el-button type="danger" plain>紧急插播</el-button>
+
+      <div class="pull-right">
+        <el-input
+          placeholder="搜索"
+          suffix-icon="el-icon-search"
+          v-model="search"
+          @blur="getPlayList"
+          @keyup.enter.native="getPlayList"
+          clearable>
+        </el-input>
+      </div>
     </el-header>
     <el-container class="playlist-table-container">
       <el-main>
@@ -167,6 +178,7 @@ export default {
         value: 'emergent',
         label: '紧急'
       }],
+      search: '',
       status: '',
       playValue: 'ordinary',
       currentPage: 1,
@@ -212,7 +224,7 @@ export default {
       const self = this
       const parmes = {
         type: this.playValue,
-        // keyword: '',
+        keyword: this.search,
         page: this.currentPage,
         rows: this.pageSize
       }
