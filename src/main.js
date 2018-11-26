@@ -8,6 +8,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import './assets/iconfont/iconfont.css'
 import api from './api/'
 import _ from 'lodash'
+import store from './store';
 import less from 'less'
 // 引入cookie
 import VueCookies from 'vue-cookies'
@@ -17,7 +18,6 @@ Vue.use(VueCookies)
 Vue.use(less)
 
 Vue.config.productionTip = false
-// Vue.prototype.$axios.defaults.baseURL = process.env.API_ROOT
 
 Vue.prototype.$api = api
 Vue.prototype._ = _
@@ -26,6 +26,7 @@ Vue.prototype._ = _
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  store,
   router,
   components: { App },
   template: '<App/>'

@@ -82,6 +82,13 @@ export default {
       console.log(tab, event)
     },
     /**
+     * 检查用户是否存在
+     */
+    checkUser () {
+      const self = this
+      this.$api.api2.getUser()
+    },
+    /**
      * 获取验证码
      */
     getCode () {
@@ -98,6 +105,7 @@ export default {
             this.timer = null
           }
         }, 1000)
+
       }
     },
     submitForm (formName) {

@@ -142,6 +142,7 @@ export default {
   },
   computed: {
     rects() {
+      console.log(this.$store.state.rect.rects)
       return this.$store.state.rect.rects
     }
   },
