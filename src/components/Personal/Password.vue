@@ -29,21 +29,21 @@ export default {
   data () {
     let validatePass = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入密码'));
+        callback(new Error('请输入密码'))
       } else {
         if (this.form.checkPass !== '') {
-          this.$refs.form.validateField('checkPass');
+          this.$refs.form.validateField('checkPass')
         }
-        callback();
+        callback()
       }
     }
     let validatePass2 = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请再次输入密码'));
+        callback(new Error('请再次输入密码'))
       } else if (value !== this.form.pass) {
-        callback(new Error('两次输入密码不一致!'));
+        callback(new Error('两次输入密码不一致!'))
       } else {
-        callback();
+        callback()
       }
     }
     return {
@@ -104,6 +104,7 @@ export default {
           }
         })
         .catch(err => {
+          console.log(err)
           self.$message.error('修改密码失败！')
         })
     }

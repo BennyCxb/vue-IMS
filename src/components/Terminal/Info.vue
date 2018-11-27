@@ -84,9 +84,6 @@ export default {
     },
     getTermInfo () {
       const self = this
-      const params = {
-        id: this.termid
-      }
       this.$api.api2.getTermInfo({}, this.termid)
         .then(response => {
           // console.log(response)

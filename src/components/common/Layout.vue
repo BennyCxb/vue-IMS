@@ -84,7 +84,7 @@
 
     <div id="container" class="container" :style="{height: cheight + 'px', background: background}">
       <div class="list" id="list">
-        <VueDragResize v-for="(rect, index) in rects"
+        <vue-drag-resize v-for="(rect, index) in rects"
                        :w="rect.width"
                        :h="rect.height"
                        :x="rect.left"
@@ -106,7 +106,7 @@
                        v-on:resizing="changeSize($event, index)"
         >
           <div class="filler" :style="{backgroundColor:rect.color}"></div>
-        </VueDragResize>
+        </vue-drag-resize>
       </div>
 
       <toolbar></toolbar>
@@ -122,7 +122,7 @@
 // import VueDraggableResizable from 'vue-draggable-resizable'
 // import VueDragResize from 'vue-drag-resize'
 import VueDragResize from './vue-drag-resize.vue'
-import toolbar from '../Toolbar/toolbar'
+import toolbar from '../Toolbar/toolbar.vue'
 export default {
   components: {
     VueDragResize,
@@ -137,7 +137,9 @@ export default {
       background: 'rgba(216, 216, 216, 1)',
       cheight: 200,
       rate: 1, // 缩放比例
-      elementList: []
+      elementList: [],
+      listWidth: 0,
+      listHeight: 0
     }
   },
   computed: {
@@ -161,37 +163,37 @@ export default {
           self.resetLayoutSize()
         })
       }
-      const widget = [{
-        tpye: 1, // 控件类型
-        style: { // 控件样式，json字符串
-          'width': '100px', // 宽
-          'height': '100px', // 高
-          'top': '50px', // x
-          'left': '50px', // y
-          'z-index': 1 // 层级
-        },
-        attr: { // 控件属性，json字符串，包含方向、速度等
-          'speed': 1, // 速度
-          'direction': 'RightToLeft', // 方向
-          'fontFamily': '宋体', // 字体
-          'background': '#FFF', // 背景颜色
-          'color': '#000', // 字体颜色
-          'switchType': 1, // 切换方式
-          'switchAnimation': '随机', // 切换动画
-          'switchAnimation': '01:15:30', //切换间隔
-        },
-        playlist: [ // 播放列表，主要是文件顺序
-          {
-            id: 1, // 文件id
-            name: 'xxx.jpg', // 文件名
-            type: 1, // 文件类型
-            size: '1MB', // 文件大小
-            duration: 15, // 文件时长（视频、音乐独有）
-            url: '', // 网址（网页独有）
-            groupId: 1 // 排序号
-          }
-        ]
-      }]
+      // const widget = [{
+      //   tpye: 1, // 控件类型
+      //   style: { // 控件样式，json字符串
+      //     'width': '100px', // 宽
+      //     'height': '100px', // 高
+      //     'top': '50px', // x
+      //     'left': '50px', // y
+      //     'z-index': 1 // 层级
+      //   },
+      //   attr: { // 控件属性，json字符串，包含方向、速度等
+      //     'speed': 1, // 速度
+      //     'direction': 'RightToLeft', // 方向
+      //     'fontFamily': '宋体', // 字体
+      //     'background': '#FFF', // 背景颜色
+      //     'color': '#000', // 字体颜色
+      //     'switchType': 1, // 切换方式
+      //     'switchAnimation': '随机', // 切换动画
+      //     'switchAnimation': '01:15:30', //切换间隔
+      //   },
+      //   playlist: [ // 播放列表，主要是文件顺序
+      //     {
+      //       id: 1, // 文件id
+      //       name: 'xxx.jpg', // 文件名
+      //       type: 1, // 文件类型
+      //       size: '1MB', // 文件大小
+      //       duration: 15, // 文件时长（视频、音乐独有）
+      //       url: '', // 网址（网页独有）
+      //       groupId: 1 // 排序号
+      //     }
+      //   ]
+      // }]
     },
     resetLayoutSize () {
       const self = this
@@ -211,7 +213,7 @@ export default {
     createElement () {
 
     },
-    onResize: function (x, y, width, height) {
+    onResize (x, y, width, height) {
       let activeWeight = this._.find(this.elementList, item => {
         return item.active
       })
@@ -222,9 +224,31 @@ export default {
         activeWeight.style.height = height
       }
     },
-    onDrag: function (x, y) {
+    onDrag (x, y) {
       this.x = x
       this.y = y
+    },
+    activateEv(index) {
+      this.$store.dispatch('rect/setActive', {id: index})
+    },
+
+    deactivateEv (index) {
+      this.$store.dispatch('rect/unsetActive', {id: index})
+    },
+
+    changePosition (newRect, index) {
+
+      this.$store.dispatch('rect/setTop', {id: index, top: newRect.top})
+      this.$store.dispatch('rect/setLeft', {id: index, left: newRect.left})
+      this.$store.dispatch('rect/setWidth', {id: index, width: newRect.width})
+      this.$store.dispatch('rect/setHeight', {id: index, height: newRect.height})
+    },
+
+    changeSize (newRect, index) {
+      this.$store.dispatch('rect/setTop', {id: index, top: newRect.top})
+      this.$store.dispatch('rect/setLeft', {id: index, left: newRect.left})
+      this.$store.dispatch('rect/setWidth', {id: index, width: newRect.width})
+      this.$store.dispatch('rect/setHeight', {id: index, height: newRect.height})
     }
   },
   created () {
@@ -241,6 +265,15 @@ export default {
         this.getLayoutHeight()
       })()
     }
+
+    let listEl = document.getElementById('list')
+    this.listWidth = listEl.clientWidth
+    this.listHeight = listEl.clientHeight
+
+    window.addEventListener('resize', ()=>{
+      this.listWidth = listEl.clientWidth
+      this.listHeight = listEl.clientHeight
+    })
   },
   props: ['layoutData'],
   watch: {
@@ -294,6 +327,7 @@ export default {
     min-height: 100px;
     background:rgba(242,242,242,1);
     border:1px solid rgba(151,151,151,1);
+    box-sizing: border-box;
   }
 
   .assembly-item {
@@ -322,6 +356,23 @@ export default {
     /*font-size:14px;*/
     /*color: #ffffff;*/
   /*}*/
+
+  .filler {
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    position: absolute;
+  }
+
+  .list {
+    position: absolute;
+    top: 30px;
+    bottom: 30px;
+    left: 30px;
+    right: 300px;
+    box-shadow: 0 0 2px #AAA;
+    background-color: white;
+  }
 
   /*组件按钮样式*/
   .layout-main-assembly {

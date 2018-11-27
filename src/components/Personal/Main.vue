@@ -72,7 +72,7 @@ export default {
       active: 0,
       username: sessionStorage.getItem('ms_username'),
       nickname: '',
-      phone: '',
+      phone: ''
     }
   },
   methods: {

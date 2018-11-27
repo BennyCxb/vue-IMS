@@ -13,5 +13,5 @@ export default {
   // 获取手机随机码
   getCaptcha (phone, params) {
     return get(`/captcha/${phone}`, params)
-  },
+  }
 }

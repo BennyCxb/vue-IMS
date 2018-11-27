@@ -8,7 +8,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import './assets/iconfont/iconfont.css'
 import api from './api/'
 import _ from 'lodash'
-import store from './store';
+import store from './store'
 import less from 'less'
 // 引入cookie
 import VueCookies from 'vue-cookies'

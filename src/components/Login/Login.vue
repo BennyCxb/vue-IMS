@@ -47,12 +47,6 @@
 </template>
 
 <script>
-// import { gensalt, hashpw } from './bCrypt'
-// import sha from './sha'
-// import bcrypt from 'bcryptjs'
-
-var bcrypt = require('bcryptjs')
-
 export default {
   data: function () {
     return {
@@ -84,10 +78,10 @@ export default {
     /**
      * 检查用户是否存在
      */
-    checkUser () {
-      const self = this
-      this.$api.api2.getUser()
-    },
+    // checkUser () {
+    //   const self = this
+    //   this.$api.api2.getUser()
+    // },
     /**
      * 获取验证码
      */
@@ -105,20 +99,10 @@ export default {
             this.timer = null
           }
         }, 1000)
-
       }
     },
     submitForm (formName) {
       const self = this
-      // this.$refs[formName].validate((valid) => {
-      //   if (valid) {
-      //     this.getVerifyCode()
-      //   } else {
-      //     console.log('error submit!!')
-      //     return false
-      //   }
-      // })
-      // self.$router.push('/Home')
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$api.api1.login({
@@ -201,14 +185,6 @@ export default {
       //     // })
       //   })
       self.$router.push('/Home')
-
-    },
-    psw () {
-      const rawdata = JSON.stringify({
-        UserName: this.form.username,
-        Code: this.form.code
-      })
-      bcrypt.hash(encode(this.form.username), encode(this.form.code))
     },
     login () {
       const self = this

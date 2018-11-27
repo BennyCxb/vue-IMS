@@ -17,8 +17,6 @@ Vue.prototype.$static = ''
 
 const cookies = VueCookies
 
-const vue = Vue
-
 // 配置接口地址
 axios.defaults.baseURL = process.env.API_ROOT
 var loadingInstance

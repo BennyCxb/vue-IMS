@@ -61,7 +61,7 @@
                 </p>
                 <div style="text-align: right; margin: 0">
                   <el-button size="mini" type="text" @click="tagsSetVisible = false">取消</el-button>
-                  <el-button type="primary" size="mini" @click="">确定</el-button>
+                  <el-button type="primary" size="mini">确定</el-button>
                 </div>
                 <el-button slot="reference" plain>打标签</el-button>
               </el-popover>
@@ -235,7 +235,7 @@ export default {
             list.push({
               id: item.id,
               name: item.name,
-              checked: false,
+              checked: false
             })
           })
           self.tags = [].concat(list)
