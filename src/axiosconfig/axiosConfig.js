@@ -47,7 +47,7 @@ axios.interceptors.request.use(
 // 返回状态判断(添加响应拦截器)
 axios.interceptors.response.use(
   res => {
-    if (200 <= res.status < 300) {
+    if (res.status >= 200 && res.status < 300) {
       if (res.config.headers.Authorization) {
         loadingInstance.close()
       } else if (cookies.get('Info')) {

@@ -64,7 +64,6 @@ import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 export default {
-  name: "info",
   data () {
     return {
       resouceid: '',
@@ -75,7 +74,6 @@ export default {
         size: 0,
         parentid: 0
       },
-      //表单验证
       rules: {
         name: [
           {required: true, message: '请输入名称', trigger: 'blur'}
@@ -91,12 +89,12 @@ export default {
     quillEditor
   },
   computed: {
-    editor() {
+    editor () {
       return this.$refs.myQuillEditor.quill
     }
   },
   methods: {
-    onEditorReady(editor) {
+    onEditorReady (editor) {
 
     },
     getInfo () {
@@ -117,10 +115,10 @@ export default {
       this.$router.back(-1)
     },
     onSubmit () {
-      //提交
+      // 提交
       let self = this
       this.$refs.infoForm.validate((valid) => {
-        if(valid) {
+        if (valid) {
           console.log(self.resouceid)
           if (self.resouceid === '' || self.resouceid === undefined) { // 新增
             this.$api.api2.addResource(this.infoForm)
@@ -150,7 +148,7 @@ export default {
               })
           }
         }
-      });
+      })
     }
   },
   created () {

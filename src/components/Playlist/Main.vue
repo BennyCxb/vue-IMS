@@ -220,7 +220,7 @@ export default {
     /**
      * 获取播单列表
      */
-    getPlayList() {
+    getPlayList () {
       const self = this
       const parmes = {
         type: this.playValue,

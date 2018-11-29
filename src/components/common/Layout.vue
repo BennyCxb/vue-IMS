@@ -100,10 +100,11 @@
                        :parentLimitation="rect.parentLim"
                        :aspectRatio="rect.aspectRatio"
                        :z="rect.zIndex"
-                       v-on:activated="activateEv(index)"
-                       v-on:deactivated="deactivateEv(index)"
-                       v-on:dragging="changePosition($event, index)"
-                       v-on:resizing="changeSize($event, index)"
+                       :key="index"
+                       @activated="activateEv(index)"
+                       @deactivated="deactivateEv(index)"
+                       @dragging="changePosition($event, index)"
+                       @resizing="changeSize($event, index)"
         >
           <div class="filler" :style="{backgroundColor:rect.color}"></div>
         </vue-drag-resize>
@@ -143,7 +144,7 @@ export default {
     }
   },
   computed: {
-    rects() {
+    rects () {
       console.log(this.$store.state.rect.rects)
       return this.$store.state.rect.rects
     }
@@ -228,16 +229,13 @@ export default {
       this.x = x
       this.y = y
     },
-    activateEv(index) {
+    activateEv (index) {
       this.$store.dispatch('rect/setActive', {id: index})
     },
-
     deactivateEv (index) {
       this.$store.dispatch('rect/unsetActive', {id: index})
     },
-
     changePosition (newRect, index) {
-
       this.$store.dispatch('rect/setTop', {id: index, top: newRect.top})
       this.$store.dispatch('rect/setLeft', {id: index, left: newRect.left})
       this.$store.dispatch('rect/setWidth', {id: index, width: newRect.width})
@@ -265,12 +263,10 @@ export default {
         this.getLayoutHeight()
       })()
     }
-
     let listEl = document.getElementById('list')
     this.listWidth = listEl.clientWidth
     this.listHeight = listEl.clientHeight
-
-    window.addEventListener('resize', ()=>{
+    window.addEventListener('resize', () => {
       this.listWidth = listEl.clientWidth
       this.listHeight = listEl.clientHeight
     })
