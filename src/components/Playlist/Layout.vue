@@ -24,12 +24,12 @@
           <el-row>
             <el-col :span="15" class="text-left">
               <el-button>选择模版</el-button>
-              <el-dropdown>
+              <el-dropdown @command="createElement">
                 <el-button type="primary">
                   插入组件<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item>字幕</el-dropdown-item>
+                  <el-dropdown-item command="a">字幕</el-dropdown-item>
                   <el-dropdown-item>图片/PDF</el-dropdown-item>
                   <el-dropdown-item>视频/音频</el-dropdown-item>
                   <el-dropdown-item>网页</el-dropdown-item>
@@ -59,7 +59,6 @@
             </div>
           </el-aside>
           <el-main class="layout-main">
-            <!-- Layout begin -->
 
             <!--画布模块 begin-->
             <layout :layoutData="layoutData"></layout>
@@ -68,38 +67,39 @@
           </el-main>
           <el-aside class="layout-main-right">
             <!--组件属性-->
-            <div class="layout-assembly-attribute">
-              <div class="attribute-group">
-                <label>对齐</label>
-                <span>
-                  <i class="icon iconfont icon-align-left"></i>
-                  <i class="icon iconfont icon-align-center"></i>
-                  <i class="icon iconfont icon-align-right"></i>
-                </span>
-              </div>
-              <div class="attribute-group">
-                <label>位置</label>
-                <span>
-                  X&nbsp;&nbsp;<el-input v-model="selectElement.style.left" size="mini" class="attribute-position-input"></el-input>
-                </span>
-                <span>
-                  Y&nbsp;&nbsp;<el-input v-model="selectElement.style.top" size="mini" class="attribute-position-input"></el-input>
-                </span>
-              </div>
-              <div class="attribute-group">
-                <label>大小</label>
-                <span>
-                  宽 <el-input v-model="selectElement.style.width" size="mini" class="attribute-position-input"></el-input>
-                </span>
-                <span>
-                  高 <el-input v-model="selectElement.style.height" size="mini" class="attribute-position-input"></el-input>
-                </span>
-              </div>
-              <div class="attribute-group">
-                <el-button>上移一层</el-button>
-                <el-button>下移一层</el-button>
-              </div>
-            </div>
+            <!--<div class="layout-assembly-attribute">-->
+              <!--<div class="attribute-group">-->
+                <!--<label>对齐</label>-->
+                <!--<span>-->
+                  <!--<i class="icon iconfont icon-align-left"></i>-->
+                  <!--<i class="icon iconfont icon-align-center"></i>-->
+                  <!--<i class="icon iconfont icon-align-right"></i>-->
+                <!--</span>-->
+              <!--</div>-->
+              <!--<div class="attribute-group">-->
+                <!--<label>位置</label>-->
+                <!--<span>-->
+                  <!--X&nbsp;&nbsp;<el-input v-model="selectElement.style.left" size="mini" class="attribute-position-input"></el-input>-->
+                <!--</span>-->
+                <!--<span>-->
+                  <!--Y&nbsp;&nbsp;<el-input v-model="selectElement.style.top" size="mini" class="attribute-position-input"></el-input>-->
+                <!--</span>-->
+              <!--</div>-->
+              <!--<div class="attribute-group">-->
+                <!--<label>大小</label>-->
+                <!--<span>-->
+                  <!--宽 <el-input v-model="selectElement.style.width" size="mini" class="attribute-position-input"></el-input>-->
+                <!--</span>-->
+                <!--<span>-->
+                  <!--高 <el-input v-model="selectElement.style.height" size="mini" class="attribute-position-input"></el-input>-->
+                <!--</span>-->
+              <!--</div>-->
+              <!--<div class="attribute-group">-->
+                <!--<el-button>上移一层</el-button>-->
+                <!--<el-button>下移一层</el-button>-->
+              <!--</div>-->
+            <!--</div>-->
+            <toolbar></toolbar>
             <!--组件参数-->
             <!--字幕组建参数-->
             <div class="layout-assembly-attribute" v-if="selectElement.type === 1">
@@ -180,12 +180,12 @@
 </template>
 
 <script>
-// import info from './info.vue'
 import Layout from '../common/Layout'
+import Toolbar from '../Toolbar/toolbar.vue'
 export default {
   components: {
-    // info,
-    Layout
+    Layout,
+    Toolbar
   },
   data () {
     return {
@@ -258,7 +258,27 @@ export default {
       let r = Math.floor(Math.random() * 256)
       let g = Math.floor(Math.random() * 256)
       let b = Math.floor(Math.random() * 256)
-      return `rgba(${r}, ${g}, ${b}, 0.6)`
+      return `rgba(${r}, ${g}, ${b}, 0.7)`
+    },
+    createElement (command) {
+      console.log(command)
+      this.$store.dispatch('rect/addObject', {
+        'width': 200,
+        'height': 150,
+        'top': 170,
+        'left': 220,
+        'draggable': true,
+        'resizable': true,
+        'minw': 10,
+        'minh': 10,
+        'name': '测试',
+        'axis': 'both',
+        'parentLim': true,
+        'aspectRatio': false,
+        'zIndex': 4,
+        'color': this.randomBgColor,
+        'active': false
+      })
     }
   }
   // mounted () {
@@ -384,6 +404,7 @@ export default {
   }
 
   .layout-main {
+    min-width: 1080px;
     padding: 20px 30px;
     border-left: 1px solid rgba(0,0,0,0.1);
     border-right: 1px solid rgba(0,0,0,0.1);
@@ -391,6 +412,7 @@ export default {
 
   /*画布右侧模块*/
   .layout-main-right {
+    position: relative;
     width: 260px;
     background:rgba(247,247,247,1);
   }

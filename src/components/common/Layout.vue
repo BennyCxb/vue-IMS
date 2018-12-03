@@ -20,69 +20,7 @@
       </el-col>
     </el-row>
     <!--画布控制区域-->
-    <!--<div id="container" class="container" :style="{height: cheight + 'px', background: background}">-->
-      <!--&lt;!&ndash;<div class="assembly-item noselect" v-for="(item, i) in layoutData.elementList" :key="i" :style="item.style">&ndash;&gt;-->
-      <!--&lt;!&ndash;<table>&ndash;&gt;-->
-      <!--&lt;!&ndash;<tr>&ndash;&gt;-->
-      <!--&lt;!&ndash;<td class="noselect" :style="{height: item.style.height}">{{item.name}}</td>&ndash;&gt;-->
-      <!--&lt;!&ndash;</tr>&ndash;&gt;-->
-      <!--&lt;!&ndash;</table>&ndash;&gt;-->
-      <!--&lt;!&ndash;<div class="">{{item.name}}</div>&ndash;&gt;-->
-      <!--&lt;!&ndash;{{item.name}}&ndash;&gt;-->
-      <!--&lt;!&ndash;</div>&ndash;&gt;-->
-      <!--<template v-for="(item, i) in elementList">-->
-        <!--&lt;!&ndash;<vue-draggable-resizable&ndash;&gt;-->
-          <!--&lt;!&ndash;class="assembly-item"&ndash;&gt;-->
-          <!--&lt;!&ndash;:key="i"&ndash;&gt;-->
-          <!--&lt;!&ndash;:active.sync="item.active"&ndash;&gt;-->
-          <!--&lt;!&ndash;:parent="true"&ndash;&gt;-->
-          <!--&lt;!&ndash;:resizable="true"&ndash;&gt;-->
-          <!--&lt;!&ndash;:x="item.style.left"&ndash;&gt;-->
-          <!--&lt;!&ndash;:y="item.style.top"&ndash;&gt;-->
-          <!--&lt;!&ndash;:w="100"&ndash;&gt;-->
-          <!--&lt;!&ndash;:h="100"&ndash;&gt;-->
-          <!--&lt;!&ndash;:z="item.style['z-index']"&ndash;&gt;-->
-          <!--&lt;!&ndash;:style="{background: item.style.background,&ndash;&gt;-->
-            <!--&lt;!&ndash;width: item.style.width,&ndash;&gt;-->
-            <!--&lt;!&ndash;height: item.style.height}"&ndash;&gt;-->
-          <!--&lt;!&ndash;:snap="true"&ndash;&gt;-->
-          <!--&lt;!&ndash;@dragging="onDrag"&ndash;&gt;-->
-          <!--&lt;!&ndash;@resizing="onResize">&ndash;&gt;-->
-          <!--&lt;!&ndash;<p class="noselect">{{ item.name }}</p>&ndash;&gt;-->
-        <!--&lt;!&ndash;</vue-draggable-resizable>&ndash;&gt;-->
-
-        <!--&lt;!&ndash;<VueDragResize :isActive="true" :active.sync="item.active" :w="200" :h="200" v-on:resizing="onResize" v-on:dragging="onResize">&ndash;&gt;-->
-          <!--&lt;!&ndash;<h3>Hello World!</h3>&ndash;&gt;-->
-          <!--&lt;!&ndash;<p>{{ item.style.top }} х {{ item.style.left }} </p>&ndash;&gt;-->
-          <!--&lt;!&ndash;<p>{{ item.style.width }} х {{ item.style.height }}</p>&ndash;&gt;-->
-        <!--&lt;!&ndash;</VueDragResize>&ndash;&gt;-->
-        <!--<VueDragResize v-for="(rect, index) in rects"-->
-                       <!--:w="rect.width"-->
-                       <!--:h="rect.height"-->
-                       <!--:x="rect.left"-->
-                       <!--:y="rect.top"-->
-                       <!--:parentW="listWidth"-->
-                       <!--:parentH="listHeight"-->
-                       <!--:axis="rect.axis"-->
-                       <!--:isActive="rect.active"-->
-                       <!--:minw="rect.minw"-->
-                       <!--:minh="rect.minh"-->
-                       <!--:isDraggable="rect.draggable"-->
-                       <!--:isResizable="rect.resizable"-->
-                       <!--:parentLimitation="rect.parentLim"-->
-                       <!--:aspectRatio="rect.aspectRatio"-->
-                       <!--:z="rect.zIndex"-->
-                       <!--v-on:activated="activateEv(index)"-->
-                       <!--v-on:deactivated="deactivateEv(index)"-->
-                       <!--v-on:dragging="changePosition($event, index)"-->
-                       <!--v-on:resizing="changeSize($event, index)"-->
-        <!--&gt;-->
-          <!--<div class="filler" :style="{backgroundColor:rect.color}"></div>-->
-        <!--</VueDragResize>-->
-      <!--</template>-->
-    <!--</div>-->
-
-    <div id="container" class="container" :style="{height: cheight + 'px', background: background}">
+    <div id="container" class="container">
       <div class="list" id="list">
         <vue-drag-resize v-for="(rect, index) in rects"
                        :w="rect.width"
@@ -109,19 +47,22 @@
           <div class="filler" :style="{backgroundColor:rect.color}"></div>
         </vue-drag-resize>
       </div>
-
-      <toolbar></toolbar>
     </div>
     <div class="layout-main-assembly">
       已插入组件：
-      <el-button :type="item.active ? 'primary' : ''" plain v-for="(item, i) in layoutData.elementList" :key="i" :style="{border: `1px solid ${item.style.background}`}">{{item.name}}</el-button>
+      <el-button v-for="(rect, index) in rects"
+                 :key="index"
+                 :style="{border: `1px solid ${rect.color}`}"
+                 :type="rect.active ? 'primary' : ''"
+                 @click="activateEv(index)"
+                 plain>
+        {{rect.name}}
+      </el-button>
     </div>
   </div>
 </template>
 
 <script>
-// import VueDraggableResizable from 'vue-draggable-resizable'
-// import VueDragResize from 'vue-drag-resize'
 import VueDragResize from './vue-drag-resize.vue'
 import toolbar from '../Toolbar/toolbar.vue'
 export default {
@@ -145,25 +86,24 @@ export default {
   },
   computed: {
     rects () {
-      console.log(this.$store.state.rect.rects)
       return this.$store.state.rect.rects
     }
   },
   methods: {
     // 设置画布高度
     getLayoutHeight () {
-      const self = this
-      let container = document.getElementById('container')
-      if (container) {
-        let width = container.offsetWidth
-        // let height = container.offsetHeight
-        let rate = Math.round(width / this.layoutData.width * 100) / 100
-        this.rate = rate
-        this.cheight = Math.round(rate * this.layoutData.height * 100) / 100
-        this.$nextTick(() => {
-          self.resetLayoutSize()
-        })
-      }
+      // const self = this
+      // let container = document.getElementById('container')
+      // if (container) {
+      //   let width = container.offsetWidth
+      //   // let height = container.offsetHeight
+      //   let rate = Math.round(width / this.layoutData.width * 100) / 100
+      //   this.rate = rate
+      //   this.cheight = Math.round(rate * this.layoutData.height * 100) / 100
+      //   this.$nextTick(() => {
+      //     // self.resetLayoutSize()
+      //   })
+      // }
       // const widget = [{
       //   tpye: 1, // 控件类型
       //   style: { // 控件样式，json字符串
@@ -211,9 +151,6 @@ export default {
       })
       console.log(this.elementList)
     },
-    createElement () {
-
-    },
     onResize (x, y, width, height) {
       let activeWeight = this._.find(this.elementList, item => {
         return item.active
@@ -241,7 +178,6 @@ export default {
       this.$store.dispatch('rect/setWidth', {id: index, width: newRect.width})
       this.$store.dispatch('rect/setHeight', {id: index, height: newRect.height})
     },
-
     changeSize (newRect, index) {
       this.$store.dispatch('rect/setTop', {id: index, top: newRect.top})
       this.$store.dispatch('rect/setLeft', {id: index, left: newRect.left})
@@ -319,8 +255,10 @@ export default {
 
   .container {
     position: relative;
-    width: calc(100% - 2px);
-    min-height: 100px;
+    width: 1022px;
+    height: 602px;
+    /*min-height: 200px;*/
+    margin: 0 auto;
     background:rgba(242,242,242,1);
     border:1px solid rgba(151,151,151,1);
     box-sizing: border-box;
@@ -365,7 +303,7 @@ export default {
     top: 30px;
     bottom: 30px;
     left: 30px;
-    right: 300px;
+    right: 30px;
     box-shadow: 0 0 2px #AAA;
     background-color: white;
   }

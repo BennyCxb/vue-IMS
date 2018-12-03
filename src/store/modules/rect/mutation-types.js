@@ -28,6 +28,8 @@ export const CHANGE_HEIGHT = 'CHANGE_HEIGHT'
 export const CHANGE_TOP = 'CHANGE_TOP'
 export const CHANGE_LEFT = 'CHANGE_LEFT'
 
+export const ADD_OBJECT = 'ADD_OBJECT'
+
 export default {
   ENABLE_ACTIVE,
   DISABLE_ACTIVE,
@@ -49,5 +51,6 @@ export default {
   CHANGE_WIDTH,
   CHANGE_HEIGHT,
   CHANGE_TOP,
-  CHANGE_LEFT
+  CHANGE_LEFT,
+  ADD_OBJECT
 }

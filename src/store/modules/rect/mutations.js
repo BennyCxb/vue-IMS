@@ -19,7 +19,8 @@ import {
   CHANGE_MINH,
   CHANGE_MINW,
   CHANGE_TOP,
-  CHANGE_WIDTH
+  CHANGE_WIDTH,
+  ADD_OBJECT
 } from './mutation-types';
 
 export default {
@@ -98,5 +99,9 @@ export default {
 
   [CHANGE_MINW] (state, payload) {
     state.rects[payload.id].minw = payload.minw
+  },
+
+  [ADD_OBJECT] (state, payload) {
+    state.rects.push(payload)
   }
 }

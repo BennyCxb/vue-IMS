@@ -2,15 +2,15 @@
     --toolbar-width: 220px;
 }
 .toolbar{
-    position: absolute;
+    position: relative;
     right: 0;
     top: 0;
-    width: var(--toolbar-width);
-    padding:  15px 15px 0 15px;
-    box-shadow: 0 0 2px #AAA;
-    box-sizing: border-box;
-    background-color: white;
-    margin: 30px 30px 30px 0;
+    /*width: var(--toolbar-width);*/
+    padding:  20px;
+    /*box-shadow: 0 0 2px #AAA;*/
+    /*box-sizing: border-box;*/
+    /*background-color: white;*/
+    /*margin: 30px 30px 30px 0;*/
 }
 .toolbar-wh-row{
 
