@@ -4,10 +4,10 @@
     <el-row class="layout-main-top">
       <el-col :lg="12" :md="24" class="text-left">
         画布大小：宽：
-        <el-input-number v-model="width" controls-position="right" :min="320"></el-input-number>
+        <el-input-number v-model="width" controls-position="right" :max="1920" :min="320"></el-input-number>
         <i class="icon iconfont icon-swap"></i>
         高：
-        <el-input-number v-model="height" controls-position="right" :min="320"></el-input-number>
+        <el-input-number v-model="height" controls-position="right" :max="1920" :min="320"></el-input-number>
       </el-col>
       <el-col :lg="12" :md="24" class="text-right">
         画布背景：
@@ -20,7 +20,7 @@
       </el-col>
     </el-row>
     <!--画布控制区域-->
-    <div id="container" class="container">
+    <div id="container" class="container" :style="{width: cwidth, height: cheight, background: background}">
       <div class="list" id="list">
         <vue-drag-resize v-for="(rect, index) in rects"
                        :w="rect.width"
@@ -77,14 +77,20 @@ export default {
       width: 1920,
       height: 1080,
       background: 'rgba(216, 216, 216, 1)',
-      cheight: 200,
-      rate: 1, // 缩放比例
       elementList: [],
       listWidth: 0,
       listHeight: 0
     }
   },
   computed: {
+    cwidth () {
+      let res = this.width / 2 + 2
+      return res + 'px'
+    },
+    cheight () {
+      let res = this.height / 2 + 2
+      return res + 'px'
+    },
     rects () {
       return this.$store.state.rect.rects
     }
@@ -236,6 +242,30 @@ export default {
           self.timer = false
         }, 400)
       }
+    },
+    width () {
+      let minWidth = 0
+      let minHeight = 0
+      this._.each(this.rects, (item) => {
+        if(minWidth < item.width) {
+          minWidth = item.width
+        }
+        if(minHeight < item.height) {
+          minHeight = item.height
+        }
+      })
+      let listEl = document.getElementById('list')
+      this.$nextTick(() => {
+        this.listWidth = listEl.clientWidth
+        this.listHeight = listEl.clientHeight
+      })
+    },
+    height () {
+      let listEl = document.getElementById('list')
+      this.$nextTick(() => {
+        this.listWidth = listEl.clientWidth
+        this.listHeight = listEl.clientHeight
+      })
     }
   }
 }
@@ -255,11 +285,11 @@ export default {
 
   .container {
     position: relative;
-    width: 1022px;
-    height: 602px;
+    /*width: 1022px;*/
+    /*height: 602px;*/
     /*min-height: 200px;*/
     margin: 0 auto;
-    background:rgba(242,242,242,1);
+    /*background:rgba(242,242,242,1);*/
     border:1px solid rgba(151,151,151,1);
     box-sizing: border-box;
   }
@@ -300,12 +330,16 @@ export default {
 
   .list {
     position: absolute;
-    top: 30px;
-    bottom: 30px;
-    left: 30px;
-    right: 30px;
+    /*top: 30px;*/
+    /*bottom: 30px;*/
+    /*left: 30px;*/
+    /*right: 30px;*/
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
     box-shadow: 0 0 2px #AAA;
-    background-color: white;
+    /*background-color: white;*/
   }
 
   /*组件按钮样式*/

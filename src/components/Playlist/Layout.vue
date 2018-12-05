@@ -29,11 +29,12 @@
                   插入组件<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item command="a">字幕</el-dropdown-item>
-                  <el-dropdown-item>图片/PDF</el-dropdown-item>
-                  <el-dropdown-item>视频/音频</el-dropdown-item>
-                  <el-dropdown-item>网页</el-dropdown-item>
-                  <el-dropdown-item>富文本</el-dropdown-item>
+                  <el-dropdown-item command="MARQUEE">滚动字幕</el-dropdown-item>
+                  <el-dropdown-item command="IMAGE">图片/PDF</el-dropdown-item>
+                  <el-dropdown-item command="VIDEO">视频</el-dropdown-item>
+                  <el-dropdown-item command="AUDIO">音频</el-dropdown-item>
+                  <el-dropdown-item command="URL">网页</el-dropdown-item>
+                  <el-dropdown-item command="RICHTEXT">富文本</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </el-col>
@@ -67,38 +68,6 @@
           </el-main>
           <el-aside class="layout-main-right">
             <!--组件属性-->
-            <!--<div class="layout-assembly-attribute">-->
-              <!--<div class="attribute-group">-->
-                <!--<label>对齐</label>-->
-                <!--<span>-->
-                  <!--<i class="icon iconfont icon-align-left"></i>-->
-                  <!--<i class="icon iconfont icon-align-center"></i>-->
-                  <!--<i class="icon iconfont icon-align-right"></i>-->
-                <!--</span>-->
-              <!--</div>-->
-              <!--<div class="attribute-group">-->
-                <!--<label>位置</label>-->
-                <!--<span>-->
-                  <!--X&nbsp;&nbsp;<el-input v-model="selectElement.style.left" size="mini" class="attribute-position-input"></el-input>-->
-                <!--</span>-->
-                <!--<span>-->
-                  <!--Y&nbsp;&nbsp;<el-input v-model="selectElement.style.top" size="mini" class="attribute-position-input"></el-input>-->
-                <!--</span>-->
-              <!--</div>-->
-              <!--<div class="attribute-group">-->
-                <!--<label>大小</label>-->
-                <!--<span>-->
-                  <!--宽 <el-input v-model="selectElement.style.width" size="mini" class="attribute-position-input"></el-input>-->
-                <!--</span>-->
-                <!--<span>-->
-                  <!--高 <el-input v-model="selectElement.style.height" size="mini" class="attribute-position-input"></el-input>-->
-                <!--</span>-->
-              <!--</div>-->
-              <!--<div class="attribute-group">-->
-                <!--<el-button>上移一层</el-button>-->
-                <!--<el-button>下移一层</el-button>-->
-              <!--</div>-->
-            <!--</div>-->
             <toolbar></toolbar>
             <!--组件参数-->
             <!--字幕组建参数-->
@@ -258,26 +227,55 @@ export default {
       let r = Math.floor(Math.random() * 256)
       let g = Math.floor(Math.random() * 256)
       let b = Math.floor(Math.random() * 256)
-      return `rgba(${r}, ${g}, ${b}, 0.7)`
+      return `rgba(${r}, ${g}, ${b}, 1)`
+    },
+    colorRGB2Hex (color) {
+      let rgb = color.split(',')
+      let r = parseInt(rgb[0].split('(')[1])
+      let g = parseInt(rgb[1])
+      let b = parseInt(rgb[2].split(')')[0])
+      let hex = '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
+      return hex
     },
     createElement (command) {
-      console.log(command)
+      let name = ''
+      switch (command) {
+        case 'MARQUEE':
+          name = '滚动字幕'
+          break
+        case 'IMAGE':
+          name = '图片/PDF'
+          break
+        case 'VIDEO':
+          name = '视频'
+          break
+        case 'AUDIO':
+          name = '音频'
+          break
+        case 'URL':
+          name = '网页'
+          break
+        case 'RICHTEXT':
+          name = '富文本'
+          break
+      }
       this.$store.dispatch('rect/addObject', {
-        'width': 200,
-        'height': 150,
-        'top': 170,
-        'left': 220,
+        'width': 100,
+        'height': 50,
+        'top': 10,
+        'left': 10,
         'draggable': true,
         'resizable': true,
         'minw': 10,
         'minh': 10,
-        'name': '测试',
+        'name': name,
         'axis': 'both',
         'parentLim': true,
         'aspectRatio': false,
         'zIndex': 4,
-        'color': this.randomBgColor,
-        'active': false
+        'color': this.randomBgColor(),
+        'active': false,
+        'type': command
       })
     }
   }
