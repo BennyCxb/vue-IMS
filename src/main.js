@@ -10,12 +10,16 @@ import api from './api/'
 import _ from 'lodash'
 import store from './store'
 import less from 'less'
+import * as svgicon from 'vue-svgicon'
 // 引入cookie
 import VueCookies from 'vue-cookies'
 
 Vue.use(ElementUI, { size: 'small', zIndex: 3000 })
 Vue.use(VueCookies)
 Vue.use(less)
+Vue.use(svgicon, {
+  tagName: 'svgicon'
+})
 
 Vue.config.productionTip = false
 
