@@ -65,6 +65,7 @@
 <script>
 import VueDragResize from './vue-drag-resize.vue'
 import toolbar from '../Toolbar/toolbar.vue'
+import '../icons'
 export default {
   components: {
     VueDragResize,
@@ -247,10 +248,10 @@ export default {
       let minWidth = 0
       let minHeight = 0
       this._.each(this.rects, (item) => {
-        if(minWidth < item.width) {
+        if (minWidth < item.width) {
           minWidth = item.width
         }
-        if(minHeight < item.height) {
+        if (minHeight < item.height) {
           minHeight = item.height
         }
       })
