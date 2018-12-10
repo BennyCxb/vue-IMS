@@ -283,8 +283,8 @@ export default {
   }
 
   .term-sort-header, .term-list-header {
-    height: 65px !important;
-    line-height: 60px !important;
+    /*height: 65px !important;*/
+    line-height: 57px;
     border-radius: 2px;
     background-color: #ffffff;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -304,6 +304,7 @@ export default {
 
   .playlist-table-container {
     padding: 20px;
+    min-width: 1080px;
   }
 
   .el-main {

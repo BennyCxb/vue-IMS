@@ -163,32 +163,7 @@ export default {
         width: 1920,
         height: 1080,
         background: '#D8D8D8',
-        elementList: [
-          {
-            name: '滚动字幕一',
-            active: true,
-            style: {
-              top: 10,
-              left: 10,
-              width: 200,
-              height: 200,
-              background: this.randomBgColor(),
-              'z-index': 0
-            }
-          },
-          {
-            name: '视频一',
-            active: false,
-            style: {
-              top: 70,
-              left: 70,
-              width: 400,
-              height: 400,
-              background: this.randomBgColor(),
-              'z-index': 1
-            }
-          }
-        ]
+        elementList: []
       },
       selectElement: {
         name: '组件一', // 组件名字
