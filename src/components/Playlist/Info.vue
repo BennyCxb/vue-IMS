@@ -47,14 +47,16 @@
         <el-container class="layout-container">
           <el-aside width="115px">
             <div class="layout-aside-title">节目单</div>
-            <div class="playlist-item">
-              <div class="playlist-item-num">1</div>
-              <div class="playlist-item-box"></div>
-            </div>
-            <div class="playlist-item active">
-              <div class="playlist-item-num">2</div>
-              <div class="playlist-item-box"></div>
-            </div>
+            <template v-for="(item, index) in playList">
+              <div class="playlist-item" :class="{active: item.active}" :key="index" @click="changePlaylist">
+                <div class="playlist-item-num">{{index + 1}}</div>
+                <div class="playlist-item-box"></div>
+              </div>
+            </template>
+            <!--<div class="playlist-item active">-->
+              <!--<div class="playlist-item-num">2</div>-->
+              <!--<div class="playlist-item-box"></div>-->
+            <!--</div>-->
             <div class="playlist-item add">
               <div class="playlist-item-box"></div>
             </div>
@@ -156,6 +158,12 @@ export default {
     Layout,
     Toolbar
   },
+  computed: {
+    playList () {
+      console.log(this.$store.state.playList.playList)
+      return this.$store.state.playList.playList
+    }
+  },
   data () {
     return {
       radio: '1',
@@ -252,11 +260,14 @@ export default {
         'active': false,
         'type': command
       })
+    },
+    changePlaylist () {
+
     }
+  },
+  mounted () {
+    console.log(1)
   }
-  // mounted () {
-  //
-  // }
 }
 </script>
 

@@ -37,7 +37,7 @@
               </el-select>
             </el-col>
             <el-col :span="10" class="text-right">
-              <router-link to="/Playlist/Layout"><el-button type="primary">新建播单</el-button></router-link>
+              <router-link to="/Playlist/Info"><el-button type="primary">新建播单</el-button></router-link>
               <el-button>生成离线播单</el-button>
               <el-button>发布</el-button>
               <el-button>复制</el-button>

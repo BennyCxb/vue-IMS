@@ -1,5 +1,17 @@
 export default {
-  'rects': [
+  'playList': [
+    {
+      'active': true,
+      'id': 1,
+      'name': 'test1',
+      'widget': []
+    },
+    {
+      'active': false,
+      'id': 2,
+      'name': 'test2',
+      'widget': []
+    }
     // {
     //   'width': 200,
     //   'height': 150,

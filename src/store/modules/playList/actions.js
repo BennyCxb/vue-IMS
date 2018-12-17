@@ -2,7 +2,7 @@ import types, {CHANGE_ZINDEX} from './mutation-types';
 
 export default {
   setActive ({commit, state}, {id}) {
-    for (let i = 0, l = state.rects.length; i < l; i++) {
+    for (let i = 0, l = state.playlist.length; i < l; i++) {
       if (i === id) {
         commit(types.ENABLE_ACTIVE, i)
         continue
@@ -16,7 +16,7 @@ export default {
   },
 
   toggleDraggable ({commit, state}, {id}) {
-    if (!state.rects[id].draggable) {
+    if (!state.playlist[id].draggable) {
       commit(types.ENABLE_DRAGGABLE, id)
     } else {
       commit(types.DISABLE_DRAGGABLE, id)
@@ -24,7 +24,7 @@ export default {
   },
 
   toggleResizable ({commit, state}, {id}) {
-    if (!state.rects[id].resizable) {
+    if (!state.playlist[id].resizable) {
       commit(types.ENABLE_RESIZABLE, id)
     } else {
       commit(types.DISABLE_RESIZABLE, id)
@@ -32,7 +32,7 @@ export default {
   },
 
   toggleParentLimitation ({commit, state}, {id}) {
-    if (!state.rects[id].parentLim) {
+    if (!state.playlist[id].parentLim) {
       commit(types.ENABLE_PARENT_LIMITATION, id)
     } else {
       commit(types.DISABLE_PARENT_LIMITATION, id)
@@ -63,7 +63,7 @@ export default {
   },
 
   changeXLock ({commit, state}, {id}) {
-    switch (state.rects[id].axis) {
+    switch (state.playlist[id].axis) {
       case 'both':
         commit(types.ENABLE_Y_AXIS, id)
         break
@@ -80,7 +80,7 @@ export default {
   },
 
   changeYLock ({commit, state}, {id}) {
-    switch (state.rects[id].axis) {
+    switch (state.playlist[id].axis) {
       case 'both':
         commit(types.ENABLE_X_AXIS, id)
         break
@@ -97,35 +97,35 @@ export default {
   },
 
   changeZToBottom ({commit, state}, {id}) {
-    if (state.rects[id].zIndex === 1) {
+    if (state.playlist[id].zIndex === 1) {
       return
     }
 
     commit(types.CHANGE_ZINDEX, {id, zIndex: 1})
 
-    for (let i = 0, l = state.rects.length; i < l; i++) {
+    for (let i = 0, l = state.playlist.length; i < l; i++) {
       if (i !== id) {
-        if (state.rects[i].zIndex === state.rects.length) {
+        if (state.playlist[i].zIndex === state.playlist.length) {
           continue
         }
-        commit(types.CHANGE_ZINDEX, {id: i, zIndex: state.rects[i].zIndex + 1})
+        commit(types.CHANGE_ZINDEX, {id: i, zIndex: state.playlist[i].zIndex + 1})
       }
     }
   },
 
   changeZToTop ({commit, state}, {id}) {
-    if (state.rects[id].zIndex === state.rects.length) {
+    if (state.playlist[id].zIndex === state.playlist.length) {
       return
     }
 
-    commit(types.CHANGE_ZINDEX, {id, zIndex: state.rects.length})
+    commit(types.CHANGE_ZINDEX, {id, zIndex: state.playlist.length})
 
-    for (let i = 0, l = state.rects.length; i < l; i++) {
+    for (let i = 0, l = state.playlist.length; i < l; i++) {
       if (i !== id) {
-        if (state.rects[i].zIndex === 1) {
+        if (state.playlist[i].zIndex === 1) {
           continue
         }
-        commit(types.CHANGE_ZINDEX, {id: i, zIndex: state.rects[i].zIndex - 1})
+        commit(types.CHANGE_ZINDEX, {id: i, zIndex: state.playlist[i].zIndex - 1})
       }
     }
   },

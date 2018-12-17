@@ -22,7 +22,7 @@
     <!--画布控制区域-->
     <div id="container" class="container" :style="{width: cwidth, height: cheight, background: background}">
       <div class="list" id="list">
-        <vue-drag-resize v-for="(rect, index) in rects"
+        <vue-drag-resize v-for="(rect, index) in playList"
                        :w="rect.width"
                        :h="rect.height"
                        :x="rect.left"
@@ -50,7 +50,7 @@
     </div>
     <div class="layout-main-assembly">
       已插入组件：
-      <el-button v-for="(rect, index) in rects"
+      <el-button v-for="(rect, index) in playList"
                  :key="index"
                  :style="{border: `1px solid ${rect.color}`}"
                  :type="rect.active ? 'primary' : ''"
@@ -92,8 +92,8 @@ export default {
       let res = this.height / 2 + 2
       return res + 'px'
     },
-    rects () {
-      return this.$store.state.rect.rects
+    playList () {
+      return this.$store.state.playList
     }
   },
   methods: {

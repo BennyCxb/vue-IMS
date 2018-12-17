@@ -28,8 +28,8 @@ export default new Router({
           component: resolve => require(['../components/Playlist/Main.vue'], resolve)
         },
         {
-          path: '/Playlist/Layout',
-          component: resolve => require(['../components/Playlist/Layout.vue'], resolve)
+          path: '/Playlist/Info',
+          component: resolve => require(['../components/Playlist/Info.vue'], resolve)
         },
         {
           path: '/Template',

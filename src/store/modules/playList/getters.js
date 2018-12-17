@@ -1,9 +1,9 @@
 export default {
     getActive: state => {
-        for (let i = 0, l = state.rects.length; i < l; i++) {
-            let rect = state.rects[i]
+        for (let i = 0, l = state.playlist.length; i < l; i++) {
+            let playlist = state.playlist[i]
 
-            if (rect.active) {
+            if (playlist.active) {
                 return i
             }
         }
